@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <stdint.h>
 #include "vec2.h"
-
 /*
 В основном коде НЕ ПОДКЛЮЧАТЬ <iostream> и <stdint.h> и "vec2.h"
 Стек реализован для чисел типа vec2 (для комплексных)
@@ -20,7 +19,6 @@ DeleteItemFromHead(data) - удалить data. Поиск начинается 
 DeleteItemFromHead(data) - удалить data. Поиск начинается с начала
 
 */
-
 using namespace std;
 
 class Stack_On_Double_Linked_List {
@@ -34,13 +32,10 @@ class Stack_On_Double_Linked_List {
 		vec2 Num;
 	};
 
-	class HeadTail {
-		//Head - НАЧАЛО СТЕКА (нулевой элемент)
-		//Tail - КОНЕЦ (n-ый элемент)
-	public:
-		Node* Head = NULL;
-		Node* Tail = NULL;
-	};
+	typedef Stack_On_Double_Linked_List HeadTail;
+
+	Node* Head = NULL;
+	Node* Tail = NULL;
 
 	//Функции
 
@@ -49,91 +44,91 @@ private:
 		return (data1.real == data2.real) && (data1.imagine == data2.imagine);
 	}
 
-	bool EmptyStack(HeadTail& stack) {
-		return (stack.Head == NULL) && (stack.Tail == NULL);
+	bool EmptyStack() {
+		return (Head == NULL) && (Tail == NULL);
 	}
 public:
-	void AddItemAtTail(HeadTail& stack, vec2 data) {
+	void AddItemAtTail(vec2 data) {
 
 		Node* newNode = new Node();
 		newNode->Num = data;
 
-		if (EmptyStack(stack)) {
-			stack.Head = newNode;
-			stack.Tail = newNode;
+		if (EmptyStack()) {
+			Head = newNode;
+			Tail = newNode;
 
 			return;
 		}
 
-		Node* prevNode = stack.Tail;
+		Node* prevNode = Tail;
 
 		prevNode->Next = newNode;
 		newNode->Prev = prevNode;
-		stack.Tail = newNode;
+		Tail = newNode;
 
 	}
 
-	void AddItemAtHead(HeadTail& stack, vec2 data) {
+	void AddItemAtHead(vec2 data) {
 
 		Node* newNode = new Node();
 		newNode->Num = data;
 
-		if (EmptyStack(stack)) {
-			stack.Head = newNode;
-			stack.Tail = newNode;
+		if (EmptyStack()) {
+			Head = newNode;
+			Tail = newNode;
 
 			return;
 		}
 
-		Node* prevNode = stack.Head;
+		Node* prevNode = Head;
 
 		prevNode->Prev = newNode;
-		stack.Head = newNode;
+		Head = newNode;
 
 	}
 
-	void PopHead(HeadTail& stack) {
-		if (stack.Head == stack.Tail) {
-			stack.Head = NULL;
-			stack.Tail = NULL;
+	void PopHead() {
+		if (Head == Tail) {
+			Head = NULL;
+			Tail = NULL;
 			return;
 		}
 
-		Node* HeadNode = stack.Head;
+		Node* HeadNode = Head;
 		Node* nextNode = HeadNode->Next;
 
 		nextNode->Prev = NULL;
-		stack.Head = nextNode;
+		Head = nextNode;
 		delete HeadNode;
 	}
 
-	void PopTail(HeadTail& stack) {
+	void PopTail() {
 
-		if (stack.Head == stack.Tail) {
-			stack.Head = NULL;
-			stack.Tail = NULL;
+		if (Head == Tail) {
+			Head = NULL;
+			Tail = NULL;
 			return;
 		}
 
-		Node* TailNode = stack.Tail;
+		Node* TailNode = Tail;
 		Node* prevNode = TailNode->Prev;
 
 		prevNode->Next = NULL;
-		stack.Tail = prevNode;
+		Tail = prevNode;
 		delete TailNode;
 		return;
 
 	}
 
-	void DeleteItemFromHead(HeadTail& stack, vec2 data) {
-		if (EmptyStack(stack)) {
+	void DeleteItemFromHead(vec2 data) {
+		if (EmptyStack()) {
 			return;
 		}
 
-		Node* node = stack.Head;
-		if (stack.Head == stack.Tail && EqualData(node->Num, data)) {
-			stack.Head = NULL;
-			stack.Tail = NULL;
+		Node* node = Head;
+		if (Head == Tail && EqualData(node->Num, data)) {
+			Head = NULL;
+			Tail = NULL;
 
 			delete node;
 			return;
@@ -142,12 +137,12 @@ public:
 		while (node != NULL) {
 			if (EqualData(node->Num, data)) {
 
-				if (node == stack.Head) {
-					PopHead(stack);
+				if (node == Head) {
+					PopHead();
 					return;
 				}
-				else if (node == stack.Tail) {
-					PopTail(stack);
+				else if (node == Tail) {
+					PopTail();
 					return;
 				}
 
@@ -162,15 +157,15 @@ public:
 		}
 	}
 
-	void DeleteItemFromTail(HeadTail& stack, vec2 data) {
-		if (EmptyStack(stack)) {
+	void DeleteItemFromTail(vec2 data) {
+		if (EmptyStack()) {
 			return;
 		}
 
-		Node* node = stack.Tail;
-		if (stack.Head == stack.Tail && EqualData(node->Num, data)) {
-			stack.Head = NULL;
-			stack.Tail = NULL;
+		Node* node = Tail;
+		if (Head == Tail && EqualData(node->Num, data)) {
+			Head = NULL;
+			Tail = NULL;
 
 			delete node;
 			return;
@@ -178,12 +173,12 @@ public:
 
 		while (node != NULL) {
 			if (EqualData(node->Num, data)) {
-				if (node == stack.Head) {
-					PopHead(stack);
+				if (node == Head) {
+					PopHead();
 					return;
 				}
-				else if (node == stack.Tail) {
-					PopTail(stack);
+				else if (node == Tail) {
+					PopTail();
 					return;
 				}
 
@@ -198,14 +193,14 @@ public:
 		}
 	}
 
-	void PrintStack(HeadTail& stack) {
+	void PrintStack() {
 
-		if (stack.Head == NULL && stack.Tail == NULL) {
+		if (Head == NULL && Tail == NULL) {
 			cout << "--Current stack is empty--\n\n";
 			return;
 		}
 
-		Node* node = stack.Head;
+		Node* node = Head;
 		int c = 0;
 
 		cout << "\n\n--Start Stack Log--\n";
@@ -219,10 +214,10 @@ public:
 
 	}
 
-	void TestMod(HeadTail& stack) {
+	void TestMod() {
 
 		cout << "--Test mode of Node by Voskoboynik--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
-		char UserInput = 'q';
+		char UserInput = ' ';
 		vec2 data;
 		while (UserInput != '$') {
 			cin >> UserInput;
@@ -231,29 +226,29 @@ public:
 				cout << "--Test mod is off--";
 				break;
 			case 'p':
-				PrintStack(stack);
+				PrintStack();
 				break;
 			case 't':
 				cin >> data.real;
-				AddItemAtTail(stack, data);
+				AddItemAtTail(data);
 				break;
 			case 'h':
 				cin >> data.real;
-				AddItemAtHead(stack, data);
+				AddItemAtHead(data);
 				break;
 			case 'T':
-				PopTail(stack);
+				PopTail();
 				break;
 			case 'H':
-				PopHead(stack);
+				PopHead();
 				break;
 			case 'd':
 				cin >> data.real;
-				DeleteItemFromTail(stack, data);
+				DeleteItemFromTail( data);
 				break;
 			case 'D':
 				cin >> data.real;
-				DeleteItemFromHead(stack, data);
+				DeleteItemFromHead( data);
 				break;
 			default:
 				cout << "Wrong commend\n";
