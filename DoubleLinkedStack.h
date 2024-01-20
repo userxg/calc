@@ -18,6 +18,7 @@
 #define delH DeleteItemFromHead
 
 #define print PrintStack
+#define empty EmptyStack
 
 #define tmVec2 TestModVec
 #define tmStr TestModString
@@ -47,9 +48,10 @@ AddItemAtHead() - addH() - добавить в начало
 PopTail() - pop() - удалить конец
 PopHead() - popH() -удалить начало
 
-DeleteItemFromHead(data) - удалить data. Поиск начинается с конца
-DeleteItemFromHead(data) - удалить data. Поиск начинается с начала
+DeleteItemFromHead(data) - del(data) - удалить data. Поиск начинается с конца
+DeleteItemFromHead(data) - delH(data) - удалить data. Поиск начинается с начала
 
+EmptyStack() - empty() - пустой ли стек или нет
 */
 
 /*Test main
@@ -113,7 +115,7 @@ class Stack_On_Double_Linked_List {
 
 	//Функции
 private:
-	bool EqualData(DataType& data1, DataType& data2) {
+	bool EqualData(const DataType& data1, const DataType& data2) {
 
 		if constexpr (is_same<DataType, vec2>::value) {
 			return (data1.real == data2.real) && (data1.imagine == data2.imagine);
@@ -123,12 +125,13 @@ private:
 		}
 	}
 
+public:
+
 	bool EmptyStack() {
 		return (Head == NULL) && (Tail == NULL);
 	}
 
-public:
-	void AddItemAtTail(DataType data) {
+	void AddItemAtTail(const DataType data) {
 
 		Node* newNode = new Node();
 		newNode->Val = data;
@@ -148,7 +151,7 @@ public:
 
 	}
 
-	void AddItemAtHead(DataType data) {
+	void AddItemAtHead(const DataType data) {
 
 		Node* newNode = new Node();
 		newNode->Val = data;
@@ -168,40 +171,43 @@ public:
 
 	}
 
-	void PopTail() {
+	DataType PopTail() {
 
 		if (Head == Tail) {
 			Head = NULL;
 			Tail = NULL;
-			return;
+			return Head->Val;
 		}
-
+		DataType TailNodeSave = Tail->Val;
 		Node* TailNode = Tail;
 		Node* prevNode = TailNode->Prev;
 
 		prevNode->Next = NULL;
 		Tail = prevNode;
+
 		delete TailNode;
-		return;
+		return TailNodeSave;
 
 	}
 
-	void PopHead() {
+	DataType PopHead() {
 		if (Head == Tail) {
 			Head = NULL;
 			Tail = NULL;
-			return;
+			return Head->Val;
 		}
 
+		DataType HeadNodeSave = Head->Val;
 		Node* HeadNode = Head;
 		Node* nextNode = HeadNode->Next;
 
 		nextNode->Prev = NULL;
 		Head = nextNode;
 		delete HeadNode;
+		return HeadNodeSave;
 	}
 
-	void DeleteItemFromTail(DataType data) {
+	void DeleteItemFromTail(const DataType data) {
 		if (EmptyStack()) {
 			return;
 		}
@@ -237,7 +243,7 @@ public:
 		}
 	}
 
-	void DeleteItemFromHead(DataType data) {
+	void DeleteItemFromHead (const DataType data) {
 		if (EmptyStack()) {
 			return;
 		}
@@ -304,7 +310,7 @@ public:
 
 	void TestModVec() {
 
-		cout << "--Test mode of Node by Voskoboynik--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
 		char UserInput = ' ';
 
 		vec2 data;
@@ -315,7 +321,11 @@ public:
 			case '$':
 				cout << "--Test mod is off--";
 				break;
+			case 'm':
+				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+				break;
 			case 'p':
+
 				PrintStack();
 				break;
 			case 't':
@@ -353,7 +363,7 @@ public:
 
 	void TestModString() {
 
-		cout << "--Test mode of Node by Voskoboynik--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
 		char UserInput = ' ';
 
 		string data;
@@ -363,6 +373,9 @@ public:
 			switch (UserInput) {
 			case '$':
 				cout << "--Test mod is off--";
+				break;
+			case 'm':
+				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
 				break;
 			case 'p':
 				PrintStack();
