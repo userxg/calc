@@ -1,7 +1,7 @@
-﻿#include <iostream>
-#include <typeinfo>
+﻿#pragma once
+
 #include <string>
-#include <stdint.h>
+#include <iostream>
 
 #include "vec2.h"
 
@@ -17,6 +17,12 @@
 #define del DeleteItemFromTail
 #define delH DeleteItemFromHead
 
+#define get GetTail
+#define getH GetHead
+
+#define find FindItemFromTail
+#define findH FindItemFromHead
+ 
 #define print PrintStack
 #define empty EmptyStack
 
@@ -50,6 +56,9 @@ PopHead() - popH() -удалить начало
 
 DeleteItemFromHead(data) - del(data) - удалить data. Поиск начинается с конца
 DeleteItemFromHead(data) - delH(data) - удалить data. Поиск начинается с начала
+
+FindItemFromTail(data) - find(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с конца
+FindItemFromHead(data) - findH(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с начала
 
 EmptyStack() - empty() - пустой ли стек или нет
 */
@@ -96,12 +105,19 @@ int main() {
 
 using namespace std;
 
+class HashMap {
+
+public:
+	string Key = "";
+	int Value;
+};
+
 template <class DataType>
 
 class Stack_On_Double_Linked_List {
 
+	//node стека
 	class Node {
-		//node стека
 	public:
 		Node* Prev = NULL;
 		Node* Next = NULL;
@@ -112,15 +128,21 @@ class Stack_On_Double_Linked_List {
 	Node* Head = NULL;
 	Node* Tail = NULL;
 
-
 	//Функции
 private:
+
 	bool EqualData(const DataType& data1, const DataType& data2) {
 
 		if constexpr (is_same<DataType, vec2>::value) {
 			return (data1.real == data2.real) && (data1.imagine == data2.imagine);
 		}
 		else if constexpr (is_same<DataType, string>::value) {
+			return data1 == data2;
+		}
+		else if constexpr (is_same<DataType, HashMap>::value) {
+			return data1.Key == data2.Key;
+		}
+		else if constexpr (is_same<DataType, long double>::value) {
 			return data1 == data2;
 		}
 	}
@@ -131,7 +153,39 @@ public:
 		return (Head == NULL) && (Tail == NULL);
 	}
 
-	void AddItemAtTail(const DataType data) {
+	DataType GetTail() {
+		return Tail->Val;
+	}
+
+	DataType FindItemFromTail(const DataType& data) {
+		Node* node = Tail;
+		while (node != NULL) {
+
+			if (EqualData(node->Val, data)) {
+				return node->Val;
+			}
+			node = node->Prev;
+		}
+		return NULL;
+	}
+
+	DataType FindItemFromHead(const DataType& data) {
+		Node* node = Head;
+		while (node != NULL) {
+
+			if (EqualData(node->Val, data)) {
+				return node->Val;
+			}
+			node = node->Next;
+		}
+		return NULL;
+	}
+
+	DataType GetHead() {
+		return Head->Val;
+	}
+
+	void AddItemAtTail(const DataType& data) {
 
 		Node* newNode = new Node();
 		newNode->Val = data;
@@ -151,7 +205,7 @@ public:
 
 	}
 
-	void AddItemAtHead(const DataType data) {
+	void AddItemAtHead(const DataType& data) {
 
 		Node* newNode = new Node();
 		newNode->Val = data;
@@ -174,9 +228,10 @@ public:
 	DataType PopTail() {
 
 		if (Head == Tail) {
+			DataType Save = Tail->Val;
 			Head = NULL;
 			Tail = NULL;
-			return Head->Val;
+			return Save;
 		}
 		DataType TailNodeSave = Tail->Val;
 		Node* TailNode = Tail;
@@ -187,14 +242,14 @@ public:
 
 		delete TailNode;
 		return TailNodeSave;
-
 	}
 
 	DataType PopHead() {
 		if (Head == Tail) {
+			DataType Save = Head->Val;
 			Head = NULL;
 			Tail = NULL;
-			return Head->Val;
+			return Save;
 		}
 
 		DataType HeadNodeSave = Head->Val;
@@ -207,7 +262,7 @@ public:
 		return HeadNodeSave;
 	}
 
-	void DeleteItemFromTail(const DataType data) {
+	void DeleteItemFromTail(const DataType& data) {
 		if (EmptyStack()) {
 			return;
 		}
@@ -243,7 +298,7 @@ public:
 		}
 	}
 
-	void DeleteItemFromHead (const DataType data) {
+	void DeleteItemFromHead (const DataType& data) {
 		if (EmptyStack()) {
 			return;
 		}
@@ -302,10 +357,23 @@ public:
 				cout << ++c << ". " << node->Val << "\n";
 				node = node->Next;
 			}
+		}else if constexpr (is_same<DataType, char>::value) {
+			while (node != NULL) {
+				cout << ++c << ". " << node->Val << "\n";
+				node = node->Next;
+			}
+		}else if constexpr (is_same<DataType, long double>::value) {
+			while (node != NULL) {
+				cout << ++c << ". " << node->Val << "\n";
+				node = node->Next;
+			}
+		}else if constexpr (is_same<DataType, HashMap>::value) {
+			while (node != NULL) {
+				cout << ++c << ". Key: " << node->Key << "Value: "<< node->Value << "\n";
+				node = node->Next;
+			}
 		}
-
 		cout << "--End Stack Log--\n\n";
-
 	}
 
 	void TestModVec() {
@@ -339,9 +407,11 @@ public:
 				AddItemAtHead(data);
 				break;
 			case 'T':
+
 				PopTail();
 				break;
 			case 'H':
+
 				PopHead();
 				break;
 			case 'd':
@@ -378,6 +448,7 @@ public:
 				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
 				break;
 			case 'p':
+
 				PrintStack();
 				break;
 			case 't':
@@ -391,9 +462,11 @@ public:
 				AddItemAtHead(data);
 				break;
 			case 'T':
+
 				PopTail();
 				break;
 			case 'H':
+
 				PopHead();
 				break;
 			case 'd':
@@ -412,5 +485,4 @@ public:
 			}
 		}
 	}
-
 };
