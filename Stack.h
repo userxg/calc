@@ -47,9 +47,6 @@ public:
 		return size == 0;
 	}
 
-
-private:
-
 public:
 	~Stack()
 	{
