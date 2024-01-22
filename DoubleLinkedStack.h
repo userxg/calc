@@ -1,5 +1,10 @@
 ﻿#pragma once
 
+#ifndef _STACK_ON_DOUBLE_LINKED_LIST_
+#define _STACK_ON_DOUBLE_LINKED_LIST_
+
+//#define _TEST_MODS_
+
 #include <string>
 #include <iostream>
 
@@ -32,10 +37,7 @@
 #endif
 
 /*
-В основном коде НЕ ПОДКЛЮЧАТЬ библиотеки, которые уже включены тут
-Стек реализован для чисел типа vec2 (для комплексных)
-
-Будет доработан до работы со строками
+Стек поддерживает почти все типы
 
 Применять в main:
 Чтобы получить стек из комп.чисел нужно прописать:
@@ -63,88 +65,45 @@ FindItemFromHead(data) - findH(data) - ДЛЯ HASHMAP - возвращает з�
 EmptyStack() - empty() - пустой ли стек или нет
 */
 
-/*Test main
-#include "DoubleLinkedStack.h"
-
-typedef Stack_On_Double_Linked_List<vec2> sdll_vec;
-typedef Stack_On_Double_Linked_List<string> sdll_str;
-
-int main() {
-	sdll_vec line;
-	for (int i = 0; i < 10; i++) {
-		vec2 ComplexNum;
-		ComplexNum.real = i;
-
-		line.add(ComplexNum);
-	}
-
-	line.print();
-
-	sdll_str line1;
-
-	string s = "Hello world";
-	string s1 = "Bye world";
-
-	line1.add(s);
-	line1.add(s1);
-	line1.print();
-
-	line1.addH(s1);
-	line1.addH(s);
-	line1.print();
-
-	line1.del(s);
-	line1.print();
-	line1.delH(s1);
-	line1.print();
-
-	return 0;
-}
-
-*/
-
 using namespace std;
 
 class HashMap {
-
 public:
-	string Key = "";
+	HashMap() :Key(""), Value() {}
+
+	string Key;
 	int Value;
+public:
+	bool operator==(const HashMap& num) {
+		return this->Key == num.Key && this->Value == num.Value;
+	}
 };
 
 template <class DataType>
 
-class Stack_On_Double_Linked_List {
+//Stack based on double linked list
+class SDLL {
 
 	//node стека
 	class Node {
 	public:
-		Node* Prev = NULL;
-		Node* Next = NULL;
+		Node():Prev(NULL), Next(NULL),Val(){}
+		Node* Prev;
+		Node* Next;
 
 		DataType Val;
 	};
-
-	Node* Head = NULL;
-	Node* Tail = NULL;
+public:
+	SDLL():Head(NULL),Tail(NULL){}
+	Node* Head;
+	Node* Tail;
 
 	//Функции
 private:
 
 	bool EqualData(const DataType& data1, const DataType& data2) {
 
-		if constexpr (is_same<DataType, vec2>::value) {
-			return (data1.real == data2.real) && (data1.imagine == data2.imagine);
-		}
-		else if constexpr (is_same<DataType, string>::value) {
-			return data1 == data2;
-		}
-		else if constexpr (is_same<DataType, HashMap>::value) {
-			return data1.Key == data2.Key;
-		}
-		else if constexpr (is_same<DataType, long double>::value) {
-			return data1 == data2;
-		}
+		return data1 == data2;
 	}
 
 public:
@@ -335,7 +294,7 @@ public:
 		}
 	}
 
-	void PrintStack() {
+	void PrintStack() const {
 
 		if (Head == NULL && Tail == NULL) {
 			cout << "\n\n--Current stack is empty--\n\n";
@@ -369,14 +328,15 @@ public:
 			}
 		}else if constexpr (is_same<DataType, HashMap>::value) {
 			while (node != NULL) {
-				cout << ++c << ". Key: " << node->Key << "Value: "<< node->Value << "\n";
+				cout << ++c << ". Key: " << node->Val.Key << " Value: "<< node->Val.Value << "\n";
 				node = node->Next;
 			}
 		}
 		cout << "--End Stack Log--\n\n";
 	}
 
-	void TestModVec() {
+#ifdef _TEST_MODS_
+	void TestModVec() const {
 
 		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
 		char UserInput = ' ';
@@ -431,7 +391,7 @@ public:
 		}
 	}
 
-	void TestModString() {
+	void TestModString() const {
 
 		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
 		char UserInput = ' ';
@@ -485,4 +445,45 @@ public:
 			}
 		}
 	}
+#endif
 };
+
+/*Test main
+#include "DoubleLinkedStack.h"
+
+typedef Stack_On_Double_Linked_List<vec2> sdll_vec;
+typedef Stack_On_Double_Linked_List<string> sdll_str;
+
+int main() {
+	sdll_vec line;
+	for (int i = 0; i < 10; i++) {
+		vec2 ComplexNum;
+		ComplexNum.real = i;
+
+		line.add(ComplexNum);
+	}
+
+	line.print();
+
+	sdll_str line1;
+
+	string s = "Hello world";
+	string s1 = "Bye world";
+
+	line1.add(s);
+	line1.add(s1);
+	line1.print();
+
+	line1.addH(s1);
+	line1.addH(s);
+	line1.print();
+
+	line1.del(s);
+	line1.print();
+	line1.delH(s1);
+	line1.print();
+
+	return 0;
+}
+*/
+#endif

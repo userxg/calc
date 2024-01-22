@@ -1,12 +1,15 @@
 #pragma once
 
+#ifndef _REVERS_POLISH_NOTATION_
+#define _REVERS_POLISH_NOTATION_
+
 #include "DoubleLinkedStack.h"
 #include "MathFunctions.h"
 
-typedef Stack_On_Double_Linked_List<vec2> sdll_vec;
-typedef Stack_On_Double_Linked_List<string> sdll_str;
-typedef Stack_On_Double_Linked_List<char> sdll_c;
-typedef Stack_On_Double_Linked_List<HashMap> Map;
+typedef SDLL<vec2> sdll_vec;
+typedef SDLL<string> sdll_str;
+typedef SDLL<char> sdll_c;
+typedef SDLL<HashMap> Map;
 
 /*
 
@@ -18,32 +21,16 @@ typedef Stack_On_Double_Linked_List<HashMap> Map;
 */
 
 class GetPolishNotation {
-
 private:
+	MathFunctions libMF;
+
 	sdll_str op;
 	sdll_vec nums;
 	Map vMap;
 
 public:
 
-	void ReadExpiration() {
-		string line;
-		cout << "Type Expiration\n";
-		cin >> line;
-
-		if (!BracketsCorrectionCheck(line)) {
-			cout << "\nOops, check correction of brackets";
-			return;
-		}
-		ConnectHash();
-		vMap.PrintStack();
-		CalRPN(line);
-	}
-
-private:
-
-	void ConnectHash() {
-		MathFunctions libMF;
+	GetPolishNotation() {
 
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
 			if (libMF.FunctionValue[i]) {
@@ -55,6 +42,20 @@ private:
 			}
 		}
 	}
+
+	void ReadExpiration() {
+		string line;
+		cout << "Type Expiration\n";
+		cin >> line;
+
+		if (!BracketsCorrectionCheck(line)) {
+			cout << "\nOops, check correction of brackets";
+			return;
+		}
+		CalRPN(line);
+	}
+
+private:
 
 	bool IsNum(string c) {
 		return ("0" <= c && c <= "9") || c == ".";
@@ -71,7 +72,6 @@ private:
 			}
 		}
 	}
-
 
 	bool BracketsCorrectionCheck(string line) {
 		sdll_c stack;
@@ -103,3 +103,4 @@ private:
 	}
 
 };
+#endif
