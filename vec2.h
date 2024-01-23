@@ -19,6 +19,9 @@ public:
 	const vec2& operator+(const vec2& num)const {
 		return vec2(this->real + num.real, this->imagine + num.imagine);
 	}
+	const vec2& operator+(const ld& num)const {
+		return vec2(this->real + num, this->imagine);
+	}
 	vec2& operator+=(const vec2& num) {
 		this->real += num.real;
 		this->imagine += num.imagine;
@@ -26,6 +29,9 @@ public:
 	}
 	const vec2& operator-(const vec2& num)const {
 		return vec2(this->real - num.real, this->imagine - num.imagine);
+	}
+	const vec2& operator-(const ld& num)const {
+		return vec2(this->real - num, this->imagine);
 	}
 	vec2& operator-=(const vec2& num) {
 		this->real -= num.real;
@@ -35,11 +41,23 @@ public:
 	const vec2& operator*(const vec2& num)const {
 		return vec2(this->real * num.real - this->imagine * num.imagine, this->real * num.imagine + this->imagine * num.real);
 	}
+	const vec2& operator*(const ld& num)const {
+		return vec2(this->real * num, this->imagine * num);
+	}
 	const vec2& operator/(const vec2& num)const {
 		if (num.imagine == 0 && num.real == 0) {
 			return vec2();
 		}
 		return vec2((this->real * num.real + this->imagine * num.imagine) / (num.real * num.real + num.imagine * num.imagine), (num.real * this->imagine - this->real * num.imagine) / (num.real * num.real + num.imagine * num.imagine));
+	}
+	const vec2& operator/(const ld& num)const {
+		if (num==(ld)0) {
+			return vec2();
+		}
+		return vec2(this->real/num,this->imagine/num);
+	}
+	const vec2& operator!() {
+		return vec2(this->real, -1 * this->imagine);
 	}
 	bool operator==(const vec2& num) {	
 		return this->real == num.real && this->imagine == num.imagine;
