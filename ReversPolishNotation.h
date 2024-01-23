@@ -4,12 +4,14 @@
 #define _REVERS_POLISH_NOTATION_
 
 #include "DoubleLinkedStack.h"
-#include "MathFunctions.h"
 #include "HashMap.h"
+
+#include "vec2.h"
+#include "MathFunctions.h"
 #include "FunctionValueation.h"
 
 typedef SDLL<vec2> sdll_vec;
-typedef SDLL<std::string> sdll_str;
+typedef SDLL<std::string> sdll_op;
 typedef SDLL<char> sdll_c;
 
 /*
@@ -20,45 +22,39 @@ typedef SDLL<char> sdll_c;
 
 class GetPolishNotation {
 private:
-	MathFunctions libMF;
 
-	sdll_str op;
+	sdll_op op;
 	sdll_vec nums;
+
+	HashMap<char> FuncVal;
 
 public:
 
-	/*GetPolishNotation() {
-
+	GetPolishNotation() {
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
-			if (libMF.FunctionValue[i]) {
-
-				HashMap node;
-				node.Key = libMF.FunctionNames[i];
-				node.Value = libMF.FunctionValue[i];
-				vMap.AddItemAtTail(node);
-			}
+			FuncVal.put(FunctionNames[i], FunctionValue[i]);
 		}
-	}*/
+	}
 
-	void ReadExpiration() {
-		std::string line;
-		std::cout << "Type Expiration\n";
-		std::cin >> line;
-
-		if (!BracketsCorrectionCheck(line)) {
-			std::cout << "\nOops, check correction of brackets";
-			return;
-		}
-		//CalRPN(line);
+	void printRPN()const {
+		std::cout << "\n\n--Revers Polish Notation Start--\n";
+		op.print();
+		std::cout << '\n';
+		nums.print();
+		std::cout<< "\n--Revers Polish Notation End--\n\n";
 	}
 
 private:
 
-	bool IsNum(std::string c) {
-		return ("0" <= c && c <= "9") || c == ".";
+	void Correction(std::string& line) {
+		line = DeleteSpace(line);
+		if (!BracketsCorrectionCheck(line)) {
+			cout << "Wrong line format";
+			return;
+		}
 	}
 
-	/*void CalRPN(const std::string& line) {
+	void CalRPN(const std::string& line) {
 
 		std::string buf;
 		for (char c : line) {
@@ -68,11 +64,22 @@ private:
 				buf += ch;
 			}
 		}
-	}*/
+	}
 
-	bool BracketsCorrectionCheck(std::string line) {
+	void CalRPN(const std::string& line) {
+
+		std::string buf;
+		for (char c : line) {
+			std::string ch(1, c);
+
+			if (IsNum(ch)) {
+				buf += ch;
+			}
+		}
+	}
+
+	bool BracketsCorrectionCheck(const std::string line) {
 		sdll_c stack;
-		line = DeleteSpace(line);
 
 		for (char c : line) {
 
@@ -97,6 +104,10 @@ private:
 		}
 
 		return new_line;
+	}
+
+	bool IsNum(std::string c) {
+		return ("0" <= c && c <= "9") || c == ".";
 	}
 };
 #endif

@@ -6,11 +6,10 @@
 //#define _TEST_MODS_
 #include <iostream>
 
-template <class DataType>
 //Stack based on double linked list
-class SDLL {
 
-	//node стека
+template <class DataType>
+class SDLL {
 	class Node {
 	public:
 		Node():Prev(NULL), Next(NULL),Val(){}
@@ -23,12 +22,9 @@ public:
 	SDLL():Head(NULL),Tail(NULL){}
 	Node* Head;
 	Node* Tail;
-
-	//Функции
 private:
 
 	bool EqualData(const DataType& data1, const DataType& data2) {
-
 		return data1 == data2;
 	}
 public:
@@ -218,7 +214,7 @@ public:
 		}
 	}
 
-	void print() const {
+	void log() const {
 
 		if (Head == NULL && Tail == NULL) {
 			std::cout << "\n\n--Current stack is empty--\n\n";
@@ -238,6 +234,18 @@ public:
 		std::cout << "--End Stack Log--\n\n";
 	}
 
+	void print()const {
+		if (Head == NULL && Tail == NULL) {
+			std::cout << "--Current stack is empty--";
+		}
+
+		Node* node = Head;
+		while (node != NULL) {
+			std::cout << node->Val <<" ";
+			node = node->Next;
+		}
+	}
+
 #ifdef _TEST_MODS_
 	void TestModVec() const {
 
@@ -245,61 +253,6 @@ public:
 		char UserInput = ' ';
 
 		vec2 data;
-
-		while (UserInput != '$') {
-			std::cin >> UserInput;
-			switch (UserInput) {
-			case '$':
-				std::cout << "--Test mod is off--";
-				break;
-			case 'm':
-				std::cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
-				break;
-			case 'p':
-
-				print();
-				break;
-			case 't':
-
-				std::cin >> data.real;
-				add(data);
-				break;
-			case 'h':
-
-				std::cin >> data.real;
-				addH(data);
-				break;
-			case 'T':
-
-				pop();
-				break;
-			case 'H':
-
-				popH();
-				break;
-			case 'd':
-
-				std::cin >> data.real;
-				del(data);
-				break;
-			case 'D':
-
-				std::cin >> data.real;
-				delH(data);
-				break;
-			default:
-				std::cout << "Wrong commend\n";
-				break;
-			}
-		}
-	}
-
-	void TestModString() const {
-
-		std::cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
-		char UserInput = ' ';
-
-		std::string data;
 
 		while (UserInput != '$') {
 			std::cin >> UserInput;

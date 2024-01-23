@@ -55,36 +55,5 @@ public:
 		output << num.real << "+" << num.imagine << "i";
 		return output;
 	}
-	/*friend std::istream& operator>>(std::istream& input, vec2& num) {
-		char i = input.peek();
-
-		if(i=='i'){
-			i = input.get();
-			i = input.peek();
-			if (('1' <= i && i <= '9')) {
-				input >> num.imagine;
-				return input;
-			}
-			else if (i == '0') {
-				throw std::invalid_argument("Number can't start with '0'");
-			}
-			input >> num.imagine;
-			return input;
-		}else if (i == '0') {
-			throw std::invalid_argument("Number can't start with '0'");
-		}
-
-		ld save;
-		input >> save;
-		i = input.peek();
-
-		if (i == 'i') {
-			num.imagine = save;
-			return input;
-		}
-
-		num.real = save;
-		return input;
-	}*/
 };
 #endif

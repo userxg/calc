@@ -7,6 +7,8 @@
 #define _CAPACITY_ 30
 #define _PRIME_FOR_HASH_ 11
 
+typedef long long int lli;
+
 template <class ValueType>
 class HashMap {
 	class HashNode {
