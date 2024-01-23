@@ -5,8 +5,6 @@
 
 //#define _TEST_MODS_
 #include <iostream>
-#include "HashMap.h"
-#include "vec2.h"
 
 template <class DataType>
 //Stack based on double linked list
@@ -232,32 +230,11 @@ public:
 
 		std::cout << "\n\n--Start Stack Log--\n";
 
-		if constexpr (std::is_same<DataType, vec2>::value) {
-			while (node != NULL) {
-				std::cout << ++c << ". " << node->Val.real << " + " << node->Val.imagine << "i\n";
-				node = node->Next;
-			}
-		}else if constexpr(std::is_same<DataType, std::string>::value) {
-			while (node != NULL) {
-				std::cout << ++c << ". " << node->Val << "\n";
-				node = node->Next;
-			}
-		}else if constexpr (std::is_same<DataType, char>::value) {
-			while (node != NULL) {
-				std::cout << ++c << ". " << node->Val << "\n";
-				node = node->Next;
-			}
-		}else if constexpr (std::is_same<DataType, long double>::value) {
-			while (node != NULL) {
-				std::cout << ++c << ". " << node->Val << "\n";
-				node = node->Next;
-			}
-		}else if constexpr (std::is_same<DataType, HashMap>::value) {
-			while (node != NULL) {
-				std::cout << ++c << ". Key: " << node->Val.Key << " Value: "<< node->Val.Value << "\n";
-				node = node->Next;
-			}
+		while (node != NULL) {
+			std::cout << ++c << ". " << node->Val << "\n";
+			node = node->Next;
 		}
+
 		std::cout << "--End Stack Log--\n\n";
 	}
 

@@ -5,6 +5,7 @@
 #include <iostream>
 
 #define _CAPACITY_ 30
+#define _PRIME_FOR_HASH_ 11
 
 template <class ValueType>
 class HashMap {
@@ -23,7 +24,6 @@ class HashMap {
 
 
 private:
-	lli p = 11;
 	HashNode HashArr[_CAPACITY_];
 
 public:
@@ -95,11 +95,11 @@ private:
 		for (char c : key) {
 			if (IsLow(c)) {
 				hash = (hash + (c - 'a' + 1) * p_pow) % _CAPACITY_;
-				p_pow = (p_pow * p) % _CAPACITY_;
+				p_pow = (p_pow * _PRIME_FOR_HASH_) % _CAPACITY_;
 			}
 			else if (IsUpper(c)) {
 				hash = (hash + (c - 'A'+('a'-'A') + 1) * p_pow) % _CAPACITY_;
-				p_pow = (p_pow * p) % _CAPACITY_;
+				p_pow = (p_pow * _PRIME_FOR_HASH_) % _CAPACITY_;
 			}
 		}
 		return hash;

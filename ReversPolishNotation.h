@@ -11,14 +11,10 @@
 typedef SDLL<vec2> sdll_vec;
 typedef SDLL<std::string> sdll_str;
 typedef SDLL<char> sdll_c;
-typedef SDLL<HashMap> Map;
 
 /*
 
 Есть функция на проверку скобок ( '(' и ')' ) и удаление пробелов - BracketsCorrectionCheck(line), DeleteSpace(line) соотв. 
-
-Для получение стоимости (приоритет) каждой функции в виде HashMap используется функция ConnectHash()
-Названия функций, а также их веса заранее лежат в "MathFunctions.h"
 
 */
 
@@ -28,7 +24,6 @@ private:
 
 	sdll_str op;
 	sdll_vec nums;
-	Map vMap;
 
 public:
 
@@ -54,7 +49,7 @@ public:
 			std::cout << "\nOops, check correction of brackets";
 			return;
 		}
-		CalRPN(line);
+		//CalRPN(line);
 	}
 
 private:
@@ -63,7 +58,7 @@ private:
 		return ("0" <= c && c <= "9") || c == ".";
 	}
 
-	void CalRPN(const std::string& line) {
+	/*void CalRPN(const std::string& line) {
 
 		std::string buf;
 		for (char c : line) {
@@ -73,7 +68,7 @@ private:
 				buf += ch;
 			}
 		}
-	}
+	}*/
 
 	bool BracketsCorrectionCheck(std::string line) {
 		sdll_c stack;
@@ -103,6 +98,5 @@ private:
 
 		return new_line;
 	}
-
 };
 #endif
