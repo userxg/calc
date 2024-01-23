@@ -5,9 +5,11 @@
 
 #include "DoubleLinkedStack.h"
 #include "MathFunctions.h"
+#include "HashMap.h"
+#include "FunctionValueation.h"
 
 typedef SDLL<vec2> sdll_vec;
-typedef SDLL<string> sdll_str;
+typedef SDLL<std::string> sdll_str;
 typedef SDLL<char> sdll_c;
 typedef SDLL<HashMap> Map;
 
@@ -30,7 +32,7 @@ private:
 
 public:
 
-	GetPolishNotation() {
+	/*GetPolishNotation() {
 
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
 			if (libMF.FunctionValue[i]) {
@@ -41,15 +43,15 @@ public:
 				vMap.AddItemAtTail(node);
 			}
 		}
-	}
+	}*/
 
 	void ReadExpiration() {
-		string line;
-		cout << "Type Expiration\n";
-		cin >> line;
+		std::string line;
+		std::cout << "Type Expiration\n";
+		std::cin >> line;
 
 		if (!BracketsCorrectionCheck(line)) {
-			cout << "\nOops, check correction of brackets";
+			std::cout << "\nOops, check correction of brackets";
 			return;
 		}
 		CalRPN(line);
@@ -57,15 +59,15 @@ public:
 
 private:
 
-	bool IsNum(string c) {
+	bool IsNum(std::string c) {
 		return ("0" <= c && c <= "9") || c == ".";
 	}
 
-	void CalRPN(const string& line) {
+	void CalRPN(const std::string& line) {
 
-		string buf;
+		std::string buf;
 		for (char c : line) {
-			string ch(1, c);
+			std::string ch(1, c);
 
 			if (IsNum(ch)) {
 				buf += ch;
@@ -73,7 +75,7 @@ private:
 		}
 	}
 
-	bool BracketsCorrectionCheck(string line) {
+	bool BracketsCorrectionCheck(std::string line) {
 		sdll_c stack;
 		line = DeleteSpace(line);
 
@@ -91,8 +93,8 @@ private:
 		return stack.empty();
 	}
 
-	string DeleteSpace(string line) {
-		string new_line = "";
+	std::string DeleteSpace(std::string line) {
+		std::string new_line = "";
 
 		for (char c : line) {
 			if (c != ' ')

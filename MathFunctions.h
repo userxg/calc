@@ -9,7 +9,6 @@ typedef long double ld;
 typedef long long int lli;
 
 #define _TERMS_IN_SUM_ 731
-#define _FUNCTION_NAME_ARRAY_SIZE_ 4
 
 class MathFunctions {
 
@@ -20,17 +19,8 @@ public:
 		const_pi = cal_const_pi();
 	}
 
-
 	ld const_pi;
 	ld const_e;
-
-	/*
-	Массивы с именами функций и соотв. им приорететам
-	Для удобного использования в "ReversPolishNotaion.h" все данные хранятся в HashMap. (подробнее в "ReversPolishNotaion.h")
-	*/
-
-	const string FunctionNames[_FUNCTION_NAME_ARRAY_SIZE_] = { "Add","Sub","Mul","Div" };
-	const int FunctionValue[_FUNCTION_NAME_ARRAY_SIZE_] = { 1,1,2,2 };
 
 	//Подсчет-функции
 public:

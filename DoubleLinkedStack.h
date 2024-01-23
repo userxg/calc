@@ -4,83 +4,11 @@
 #define _STACK_ON_DOUBLE_LINKED_LIST_
 
 //#define _TEST_MODS_
-
-#include <string>
 #include <iostream>
-
+#include "HashMap.h"
 #include "vec2.h"
 
-#ifndef _Short_Func_Names_
-#define _Short_Func_Names_
-
-#define pop PopTail
-#define popH PopHead
-
-#define add AddItemAtTail
-#define addH AddItemAtHead
-
-#define del DeleteItemFromTail
-#define delH DeleteItemFromHead
-
-#define get GetTail
-#define getH GetHead
-
-#define find FindItemFromTail
-#define findH FindItemFromHead
- 
-#define print PrintStack
-#define empty EmptyStack
-
-#define tmVec2 TestModVec
-#define tmStr TestModString
-
-#endif
-
-/*
-Стек поддерживает почти все типы
-
-Применять в main:
-Чтобы получить стек из комп.чисел нужно прописать:
-typedef Stack_On_Double_Linked_List<vec2> "название";
-TestModVec() - tmVec() - режим тестирования
-
-Чтобы получить стек из строк нужно прописать:
-typedef Stack_On_Double_Linked_List<string> "название";
-TestModString() - tmStr() - режим тестирования
-
-Функции:
-
-AddItemAtTail() - add() - добавить в конец
-AddItemAtHead() - addH() - добавить в начало
-
-PopTail() - pop() - удалить конец
-PopHead() - popH() -удалить начало
-
-DeleteItemFromHead(data) - del(data) - удалить data. Поиск начинается с конца
-DeleteItemFromHead(data) - delH(data) - удалить data. Поиск начинается с начала
-
-FindItemFromTail(data) - find(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с конца
-FindItemFromHead(data) - findH(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с начала
-
-EmptyStack() - empty() - пустой ли стек или нет
-*/
-
-using namespace std;
-
-class HashMap {
-public:
-	HashMap() :Key(""), Value() {}
-
-	string Key;
-	int Value;
-public:
-	bool operator==(const HashMap& num) {
-		return this->Key == num.Key && this->Value == num.Value;
-	}
-};
-
 template <class DataType>
-
 //Stack based on double linked list
 class SDLL {
 
@@ -105,18 +33,16 @@ private:
 
 		return data1 == data2;
 	}
-
 public:
-
-	bool EmptyStack() {
+	bool empty() {
 		return (Head == NULL) && (Tail == NULL);
 	}
 
-	DataType GetTail() {
+	DataType get() {
 		return Tail->Val;
 	}
 
-	DataType FindItemFromTail(const DataType& data) {
+	DataType find(const DataType& data) {
 		Node* node = Tail;
 		while (node != NULL) {
 
@@ -128,7 +54,7 @@ public:
 		return NULL;
 	}
 
-	DataType FindItemFromHead(const DataType& data) {
+	DataType findH(const DataType& data) {
 		Node* node = Head;
 		while (node != NULL) {
 
@@ -140,16 +66,16 @@ public:
 		return NULL;
 	}
 
-	DataType GetHead() {
+	DataType getH() {
 		return Head->Val;
 	}
 
-	void AddItemAtTail(const DataType& data) {
+	void add(const DataType& data) {
 
 		Node* newNode = new Node();
 		newNode->Val = data;
 
-		if (EmptyStack()) {
+		if (empty()) {
 			Head = newNode;
 			Tail = newNode;
 
@@ -164,12 +90,12 @@ public:
 
 	}
 
-	void AddItemAtHead(const DataType& data) {
+	void addH(const DataType& data) {
 
 		Node* newNode = new Node();
 		newNode->Val = data;
 
-		if (EmptyStack()) {
+		if (empty()) {
 			Head = newNode;
 			Tail = newNode;
 
@@ -184,7 +110,7 @@ public:
 
 	}
 
-	DataType PopTail() {
+	DataType pop() {
 
 		if (Head == Tail) {
 			DataType Save = Tail->Val;
@@ -203,7 +129,7 @@ public:
 		return TailNodeSave;
 	}
 
-	DataType PopHead() {
+	DataType popH() {
 		if (Head == Tail) {
 			DataType Save = Head->Val;
 			Head = NULL;
@@ -221,8 +147,8 @@ public:
 		return HeadNodeSave;
 	}
 
-	void DeleteItemFromTail(const DataType& data) {
-		if (EmptyStack()) {
+	void del(const DataType& data) {
+		if (empty()) {
 			return;
 		}
 
@@ -238,11 +164,11 @@ public:
 		while (node != NULL) {
 			if (EqualData(node->Val, data)) {
 				if (node == Head) {
-					PopHead();
+					popH();
 					return;
 				}
 				else if (node == Tail) {
-					PopTail();
+					pop();
 					return;
 				}
 
@@ -257,8 +183,8 @@ public:
 		}
 	}
 
-	void DeleteItemFromHead (const DataType& data) {
-		if (EmptyStack()) {
+	void delH (const DataType& data) {
+		if (empty()) {
 			return;
 		}
 
@@ -275,11 +201,11 @@ public:
 			if (EqualData(node->Val, data)) {
 
 				if (node == Head) {
-					PopHead();
+					popH();
 					return;
 				}
 				else if (node == Tail) {
-					PopTail();
+					pop();
 					return;
 				}
 
@@ -294,98 +220,98 @@ public:
 		}
 	}
 
-	void PrintStack() const {
+	void print() const {
 
 		if (Head == NULL && Tail == NULL) {
-			cout << "\n\n--Current stack is empty--\n\n";
+			std::cout << "\n\n--Current stack is empty--\n\n";
 			return;
 		}
 
 		Node* node = Head;
 		int c = 0;
 
-		cout << "\n\n--Start Stack Log--\n";
+		std::cout << "\n\n--Start Stack Log--\n";
 
-		if constexpr (is_same<DataType, vec2>::value) {
+		if constexpr (std::is_same<DataType, vec2>::value) {
 			while (node != NULL) {
-				cout << ++c << ". " << node->Val.real << " + " << node->Val.imagine << "i\n";
+				std::cout << ++c << ". " << node->Val.real << " + " << node->Val.imagine << "i\n";
 				node = node->Next;
 			}
-		}else if constexpr(is_same<DataType, string>::value) {
+		}else if constexpr(std::is_same<DataType, std::string>::value) {
 			while (node != NULL) {
-				cout << ++c << ". " << node->Val << "\n";
+				std::cout << ++c << ". " << node->Val << "\n";
 				node = node->Next;
 			}
-		}else if constexpr (is_same<DataType, char>::value) {
+		}else if constexpr (std::is_same<DataType, char>::value) {
 			while (node != NULL) {
-				cout << ++c << ". " << node->Val << "\n";
+				std::cout << ++c << ". " << node->Val << "\n";
 				node = node->Next;
 			}
-		}else if constexpr (is_same<DataType, long double>::value) {
+		}else if constexpr (std::is_same<DataType, long double>::value) {
 			while (node != NULL) {
-				cout << ++c << ". " << node->Val << "\n";
+				std::cout << ++c << ". " << node->Val << "\n";
 				node = node->Next;
 			}
-		}else if constexpr (is_same<DataType, HashMap>::value) {
+		}else if constexpr (std::is_same<DataType, HashMap>::value) {
 			while (node != NULL) {
-				cout << ++c << ". Key: " << node->Val.Key << " Value: "<< node->Val.Value << "\n";
+				std::cout << ++c << ". Key: " << node->Val.Key << " Value: "<< node->Val.Value << "\n";
 				node = node->Next;
 			}
 		}
-		cout << "--End Stack Log--\n\n";
+		std::cout << "--End Stack Log--\n\n";
 	}
 
 #ifdef _TEST_MODS_
 	void TestModVec() const {
 
-		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
+		std::cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
 		char UserInput = ' ';
 
 		vec2 data;
 
 		while (UserInput != '$') {
-			cin >> UserInput;
+			std::cin >> UserInput;
 			switch (UserInput) {
 			case '$':
-				cout << "--Test mod is off--";
+				std::cout << "--Test mod is off--";
 				break;
 			case 'm':
-				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+				std::cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
 				break;
 			case 'p':
 
-				PrintStack();
+				print();
 				break;
 			case 't':
 
-				cin >> data.real;
-				AddItemAtTail(data);
+				std::cin >> data.real;
+				add(data);
 				break;
 			case 'h':
 
-				cin >> data.real;
-				AddItemAtHead(data);
+				std::cin >> data.real;
+				addH(data);
 				break;
 			case 'T':
 
-				PopTail();
+				pop();
 				break;
 			case 'H':
 
-				PopHead();
+				popH();
 				break;
 			case 'd':
 
-				cin >> data.real;
-				DeleteItemFromTail(data);
+				std::cin >> data.real;
+				del(data);
 				break;
 			case 'D':
 
-				cin >> data.real;
-				DeleteItemFromHead(data);
+				std::cin >> data.real;
+				delH(data);
 				break;
 			default:
-				cout << "Wrong commend\n";
+				std::cout << "Wrong commend\n";
 				break;
 			}
 		}
@@ -393,54 +319,54 @@ public:
 
 	void TestModString() const {
 
-		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
+		std::cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
 		char UserInput = ' ';
 
-		string data;
+		std::string data;
 
 		while (UserInput != '$') {
-			cin >> UserInput;
+			std::cin >> UserInput;
 			switch (UserInput) {
 			case '$':
-				cout << "--Test mod is off--";
+				std::cout << "--Test mod is off--";
 				break;
 			case 'm':
-				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+				std::cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
 				break;
 			case 'p':
 
-				PrintStack();
+				print();
 				break;
 			case 't':
 
-				cin >> data;
-				AddItemAtTail(data);
+				std::cin >> data;
+				add(data);
 				break;
 			case 'h':
 
-				cin >> data;
-				AddItemAtHead(data);
+				std::cin >> data;
+				addH(data);
 				break;
 			case 'T':
 
-				PopTail();
+				pop();
 				break;
 			case 'H':
 
-				PopHead();
+				popH();
 				break;
 			case 'd':
 
-				cin >> data;
-				DeleteItemFromTail(data);
+				std::cin >> data;
+				del(data);
 				break;
 			case 'D':
 
-				cin >> data;
-				DeleteItemFromHead(data);
+				std::cin >> data;
+				delH(data);
 				break;
 			default:
-				cout << "Wrong commend\n";
+				std::cout << "Wrong commend\n";
 				break;
 			}
 		}
@@ -485,5 +411,34 @@ int main() {
 
 	return 0;
 }
+*/
+
+/*
+Стек поддерживает почти все типы
+
+Применять в main:
+Чтобы получить стек из комп.чисел нужно прописать:
+typedef Stack_On_Double_Linked_List<vec2> "название";
+TestModVec() - tmVec() - режим тестирования
+
+Чтобы получить стек из строк нужно прописать:
+typedef Stack_On_Double_Linked_List<string> "название";
+TestModString() - tmStr() - режим тестирования
+
+Функции:
+
+AddItemAtTail() - add() - добавить в конец
+AddItemAtHead() - addH() - добавить в начало
+
+PopTail() - pop() - удалить конец
+PopHead() - popH() -удалить начало
+
+DeleteItemFromHead(data) - del(data) - удалить data. Поиск начинается с конца
+DeleteItemFromHead(data) - delH(data) - удалить data. Поиск начинается с начала
+
+find(data) - find(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с конца
+FindItemFromHead(data) - findH(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с начала
+
+empty() - empty() - пустой ли стек или нет
 */
 #endif
