@@ -1,53 +1,29 @@
 #pragma once
 
+#ifndef _MATH_FUNCTIONS_
+#define _MATH_FUNCTIONS_
+
+#include "vec2.h"
+
 typedef long double ld;
 typedef long long int lli;
 
 #define _TERMS_IN_SUM_ 731
-#define _FUNCTION_NAME_ARRAY_SIZE_ 4
 
 class MathFunctions {
+
 public:
-	ld const_pi = cal_const_pi();
-	ld const_e = cal_const_e();
 
-	/*
-	Массивы с именами функций и соотв. им приорететам
-	Для удобного использования в "ReversPolishNotaion.h" все данные хранятся в HashMap. (подробнее в "ReversPolishNotaion.h")
-	*/
+	MathFunctions() {
+		const_e = cal_const_e();
+		const_pi = cal_const_pi();
+	}
 
-	const string FunctionNames[_FUNCTION_NAME_ARRAY_SIZE_] = { "Add","Sub","Mul","Div" };
-	const int FunctionValue[_FUNCTION_NAME_ARRAY_SIZE_] = { 1,1,2,2 };
+	ld const_pi;
+	ld const_e;
 
 	//Подсчет-функции
 public:
-	vec2 Addition(const vec2 num1,const vec2 num2) {
-		vec2 Answer;
-		Answer.real = num1.real + num2.real;
-		Answer.imagine = num1.imagine + num2.imagine;
-		return Answer;
-	}
-
-	vec2 Subtraction(const vec2 num1, const vec2 num2) {
-		vec2 Answer;
-		Answer.real = num1.real - num2.real;
-		Answer.imagine = num1.imagine - num2.imagine;
-		return Answer;
-	}
-
-	vec2 Multiplacation(const vec2 num1, const vec2 num2) {
-		vec2 Answer;
-		Answer.real = num1.real * num2.real - num1.imagine * num2.imagine;
-		Answer.imagine = num1.real * num2.real + num1.imagine * num2.imagine;
-		return Answer;
-	}
-
-	vec2 Division(const vec2 num1, const vec2 num2) {
-		vec2 Answer;
-		Answer.real = (num1.real * num2.real + num1.imagine * num2.imagine)/(num2.real* num2.real+ num2.imagine * num2.imagine);
-		Answer.imagine = (num2.real*num1.imagine-num1.real*num2.imagine)/(num2.real * num2.real + num2.imagine * num2.imagine);
-		return Answer;
-	}
 
 	/*
 	Функции, НЕ работающие с vec2
@@ -84,3 +60,4 @@ private:
 		return e;
 	}
 };
+#endif

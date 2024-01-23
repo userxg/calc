@@ -1,49 +1,33 @@
 #pragma once
 
+#ifndef _REVERS_POLISH_NOTATION_
+#define _REVERS_POLISH_NOTATION_
+
 #include "DoubleLinkedStack.h"
 #include "MathFunctions.h"
+#include "HashMap.h"
+#include "FunctionValueation.h"
 
-typedef Stack_On_Double_Linked_List<vec2> sdll_vec;
-typedef Stack_On_Double_Linked_List<string> sdll_str;
-typedef Stack_On_Double_Linked_List<char> sdll_c;
-typedef Stack_On_Double_Linked_List<HashMap> Map;
+typedef SDLL<vec2> sdll_vec;
+typedef SDLL<std::string> sdll_str;
+typedef SDLL<char> sdll_c;
 
 /*
 
 Есть функция на проверку скобок ( '(' и ')' ) и удаление пробелов - BracketsCorrectionCheck(line), DeleteSpace(line) соотв. 
 
-Для получение стоимости (приоритет) каждой функции в виде HashMap используется функция ConnectHash()
-Названия функций, а также их веса заранее лежат в "MathFunctions.h"
-
 */
 
 class GetPolishNotation {
-
 private:
+	MathFunctions libMF;
+
 	sdll_str op;
 	sdll_vec nums;
-	Map vMap;
 
 public:
 
-	void ReadExpiration() {
-		string line;
-		cout << "Type Expiration\n";
-		cin >> line;
-
-		if (!BracketsCorrectionCheck(line)) {
-			cout << "\nOops, check correction of brackets";
-			return;
-		}
-		ConnectHash();
-		vMap.PrintStack();
-		CalRPN(line);
-	}
-
-private:
-
-	void ConnectHash() {
-		MathFunctions libMF;
+	/*GetPolishNotation() {
 
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
 			if (libMF.FunctionValue[i]) {
@@ -54,26 +38,39 @@ private:
 				vMap.AddItemAtTail(node);
 			}
 		}
+	}*/
+
+	void ReadExpiration() {
+		std::string line;
+		std::cout << "Type Expiration\n";
+		std::cin >> line;
+
+		if (!BracketsCorrectionCheck(line)) {
+			std::cout << "\nOops, check correction of brackets";
+			return;
+		}
+		//CalRPN(line);
 	}
 
-	bool IsNum(string c) {
+private:
+
+	bool IsNum(std::string c) {
 		return ("0" <= c && c <= "9") || c == ".";
 	}
 
-	void CalRPN(const string& line) {
+	/*void CalRPN(const std::string& line) {
 
-		string buf;
+		std::string buf;
 		for (char c : line) {
-			string ch(1, c);
+			std::string ch(1, c);
 
 			if (IsNum(ch)) {
 				buf += ch;
 			}
 		}
-	}
+	}*/
 
-
-	bool BracketsCorrectionCheck(string line) {
+	bool BracketsCorrectionCheck(std::string line) {
 		sdll_c stack;
 		line = DeleteSpace(line);
 
@@ -91,8 +88,8 @@ private:
 		return stack.empty();
 	}
 
-	string DeleteSpace(string line) {
-		string new_line = "";
+	std::string DeleteSpace(std::string line) {
+		std::string new_line = "";
 
 		for (char c : line) {
 			if (c != ' ')
@@ -101,5 +98,5 @@ private:
 
 		return new_line;
 	}
-
 };
+#endif

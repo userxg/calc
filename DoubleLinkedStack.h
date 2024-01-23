@@ -1,67 +1,355 @@
 ﻿#pragma once
 
-#include <string>
+#ifndef _STACK_ON_DOUBLE_LINKED_LIST_
+#define _STACK_ON_DOUBLE_LINKED_LIST_
+
+//#define _TEST_MODS_
 #include <iostream>
 
-#include "vec2.h"
+template <class DataType>
+//Stack based on double linked list
+class SDLL {
 
-#ifndef _Short_Func_Names_
-#define _Short_Func_Names_
+	//node стека
+	class Node {
+	public:
+		Node():Prev(NULL), Next(NULL),Val(){}
+		Node* Prev;
+		Node* Next;
 
-#define pop PopTail
-#define popH PopHead
+		DataType Val;
+	};
+public:
+	SDLL():Head(NULL),Tail(NULL){}
+	Node* Head;
+	Node* Tail;
 
-#define add AddItemAtTail
-#define addH AddItemAtHead
+	//Функции
+private:
 
-#define del DeleteItemFromTail
-#define delH DeleteItemFromHead
+	bool EqualData(const DataType& data1, const DataType& data2) {
 
-#define get GetTail
-#define getH GetHead
+		return data1 == data2;
+	}
+public:
+	bool empty() {
+		return (Head == NULL) && (Tail == NULL);
+	}
 
-#define find FindItemFromTail
-#define findH FindItemFromHead
- 
-#define print PrintStack
-#define empty EmptyStack
+	DataType get() {
+		return Tail->Val;
+	}
 
-#define tmVec2 TestModVec
-#define tmStr TestModString
+	DataType find(const DataType& data) {
+		Node* node = Tail;
+		while (node != NULL) {
 
+			if (EqualData(node->Val, data)) {
+				return node->Val;
+			}
+			node = node->Prev;
+		}
+		return NULL;
+	}
+
+	DataType findH(const DataType& data) {
+		Node* node = Head;
+		while (node != NULL) {
+
+			if (EqualData(node->Val, data)) {
+				return node->Val;
+			}
+			node = node->Next;
+		}
+		return NULL;
+	}
+
+	DataType getH() {
+		return Head->Val;
+	}
+
+	void add(const DataType& data) {
+
+		Node* newNode = new Node();
+		newNode->Val = data;
+
+		if (empty()) {
+			Head = newNode;
+			Tail = newNode;
+
+			return;
+		}
+
+		Node* prevNode = Tail;
+
+		prevNode->Next = newNode;
+		newNode->Prev = prevNode;
+		Tail = newNode;
+
+	}
+
+	void addH(const DataType& data) {
+
+		Node* newNode = new Node();
+		newNode->Val = data;
+
+		if (empty()) {
+			Head = newNode;
+			Tail = newNode;
+
+			return;
+		}
+
+		Node* nextNode = Head;
+
+		nextNode->Prev = newNode;
+		newNode->Next = nextNode;
+		Head = newNode;
+
+	}
+
+	DataType pop() {
+
+		if (Head == Tail) {
+			DataType Save = Tail->Val;
+			Head = NULL;
+			Tail = NULL;
+			return Save;
+		}
+		DataType TailNodeSave = Tail->Val;
+		Node* TailNode = Tail;
+		Node* prevNode = TailNode->Prev;
+
+		prevNode->Next = NULL;
+		Tail = prevNode;
+
+		delete TailNode;
+		return TailNodeSave;
+	}
+
+	DataType popH() {
+		if (Head == Tail) {
+			DataType Save = Head->Val;
+			Head = NULL;
+			Tail = NULL;
+			return Save;
+		}
+
+		DataType HeadNodeSave = Head->Val;
+		Node* HeadNode = Head;
+		Node* nextNode = HeadNode->Next;
+
+		nextNode->Prev = NULL;
+		Head = nextNode;
+		delete HeadNode;
+		return HeadNodeSave;
+	}
+
+	void del(const DataType& data) {
+		if (empty()) {
+			return;
+		}
+
+		Node* node = Tail;
+		if (Head == Tail && EqualData(node->Val, data)) {
+			Head = NULL;
+			Tail = NULL;
+
+			delete node;
+			return;
+		}
+
+		while (node != NULL) {
+			if (EqualData(node->Val, data)) {
+				if (node == Head) {
+					popH();
+					return;
+				}
+				else if (node == Tail) {
+					pop();
+					return;
+				}
+
+				Node* prevNode = node->Prev;
+				Node* nextNode = node->Next;
+
+				prevNode->Next = nextNode;
+				delete node;
+				return;
+			}
+			node = node->Prev;
+		}
+	}
+
+	void delH (const DataType& data) {
+		if (empty()) {
+			return;
+		}
+
+		Node* node = Head;
+		if (Head == Tail && EqualData(node->Val, data)) {
+			Head = NULL;
+			Tail = NULL;
+
+			delete node;
+			return;
+		}
+
+		while (node != NULL) {
+			if (EqualData(node->Val, data)) {
+
+				if (node == Head) {
+					popH();
+					return;
+				}
+				else if (node == Tail) {
+					pop();
+					return;
+				}
+
+				Node* prevNode = node->Prev;
+				Node* nextNode = node->Next;
+
+				prevNode->Next = nextNode;
+				delete node;
+				return;
+			}
+			node = node->Next;
+		}
+	}
+
+	void print() const {
+
+		if (Head == NULL && Tail == NULL) {
+			std::cout << "\n\n--Current stack is empty--\n\n";
+			return;
+		}
+
+		Node* node = Head;
+		int c = 0;
+
+		std::cout << "\n\n--Start Stack Log--\n";
+
+		while (node != NULL) {
+			std::cout << ++c << ". " << node->Val << "\n";
+			node = node->Next;
+		}
+
+		std::cout << "--End Stack Log--\n\n";
+	}
+
+#ifdef _TEST_MODS_
+	void TestModVec() const {
+
+		std::cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
+		char UserInput = ' ';
+
+		vec2 data;
+
+		while (UserInput != '$') {
+			std::cin >> UserInput;
+			switch (UserInput) {
+			case '$':
+				std::cout << "--Test mod is off--";
+				break;
+			case 'm':
+				std::cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+				break;
+			case 'p':
+
+				print();
+				break;
+			case 't':
+
+				std::cin >> data.real;
+				add(data);
+				break;
+			case 'h':
+
+				std::cin >> data.real;
+				addH(data);
+				break;
+			case 'T':
+
+				pop();
+				break;
+			case 'H':
+
+				popH();
+				break;
+			case 'd':
+
+				std::cin >> data.real;
+				del(data);
+				break;
+			case 'D':
+
+				std::cin >> data.real;
+				delH(data);
+				break;
+			default:
+				std::cout << "Wrong commend\n";
+				break;
+			}
+		}
+	}
+
+	void TestModString() const {
+
+		std::cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
+		char UserInput = ' ';
+
+		std::string data;
+
+		while (UserInput != '$') {
+			std::cin >> UserInput;
+			switch (UserInput) {
+			case '$':
+				std::cout << "--Test mod is off--";
+				break;
+			case 'm':
+				std::cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
+				break;
+			case 'p':
+
+				print();
+				break;
+			case 't':
+
+				std::cin >> data;
+				add(data);
+				break;
+			case 'h':
+
+				std::cin >> data;
+				addH(data);
+				break;
+			case 'T':
+
+				pop();
+				break;
+			case 'H':
+
+				popH();
+				break;
+			case 'd':
+
+				std::cin >> data;
+				del(data);
+				break;
+			case 'D':
+
+				std::cin >> data;
+				delH(data);
+				break;
+			default:
+				std::cout << "Wrong commend\n";
+				break;
+			}
+		}
+	}
 #endif
-
-/*
-В основном коде НЕ ПОДКЛЮЧАТЬ библиотеки, которые уже включены тут
-Стек реализован для чисел типа vec2 (для комплексных)
-
-Будет доработан до работы со строками
-
-Применять в main:
-Чтобы получить стек из комп.чисел нужно прописать:
-typedef Stack_On_Double_Linked_List<vec2> "название";
-TestModVec() - tmVec() - режим тестирования
-
-Чтобы получить стек из строк нужно прописать:
-typedef Stack_On_Double_Linked_List<string> "название";
-TestModString() - tmStr() - режим тестирования
-
-Функции:
-
-AddItemAtTail() - add() - добавить в конец
-AddItemAtHead() - addH() - добавить в начало
-
-PopTail() - pop() - удалить конец
-PopHead() - popH() -удалить начало
-
-DeleteItemFromHead(data) - del(data) - удалить data. Поиск начинается с конца
-DeleteItemFromHead(data) - delH(data) - удалить data. Поиск начинается с начала
-
-FindItemFromTail(data) - find(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с конца
-FindItemFromHead(data) - findH(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с начала
-
-EmptyStack() - empty() - пустой ли стек или нет
-*/
+};
 
 /*Test main
 #include "DoubleLinkedStack.h"
@@ -100,389 +388,34 @@ int main() {
 
 	return 0;
 }
-
 */
 
-using namespace std;
+/*
+Стек поддерживает почти все типы
 
-class HashMap {
+Применять в main:
+Чтобы получить стек из комп.чисел нужно прописать:
+typedef Stack_On_Double_Linked_List<vec2> "название";
+TestModVec() - tmVec() - режим тестирования
 
-public:
-	string Key = "";
-	int Value;
-};
+Чтобы получить стек из строк нужно прописать:
+typedef Stack_On_Double_Linked_List<string> "название";
+TestModString() - tmStr() - режим тестирования
 
-template <class DataType>
+Функции:
 
-class Stack_On_Double_Linked_List {
+AddItemAtTail() - add() - добавить в конец
+AddItemAtHead() - addH() - добавить в начало
 
-	//node стека
-	class Node {
-	public:
-		Node* Prev = NULL;
-		Node* Next = NULL;
+PopTail() - pop() - удалить конец
+PopHead() - popH() -удалить начало
 
-		DataType Val;
-	};
+DeleteItemFromHead(data) - del(data) - удалить data. Поиск начинается с конца
+DeleteItemFromHead(data) - delH(data) - удалить data. Поиск начинается с начала
 
-	Node* Head = NULL;
-	Node* Tail = NULL;
+find(data) - find(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с конца
+FindItemFromHead(data) - findH(data) - ДЛЯ HASHMAP - возвращает значение по ключу. Поиск с начала
 
-	//Функции
-private:
-
-	bool EqualData(const DataType& data1, const DataType& data2) {
-
-		if constexpr (is_same<DataType, vec2>::value) {
-			return (data1.real == data2.real) && (data1.imagine == data2.imagine);
-		}
-		else if constexpr (is_same<DataType, string>::value) {
-			return data1 == data2;
-		}
-		else if constexpr (is_same<DataType, HashMap>::value) {
-			return data1.Key == data2.Key;
-		}
-		else if constexpr (is_same<DataType, long double>::value) {
-			return data1 == data2;
-		}
-	}
-
-public:
-
-	bool EmptyStack() {
-		return (Head == NULL) && (Tail == NULL);
-	}
-
-	DataType GetTail() {
-		return Tail->Val;
-	}
-
-	DataType FindItemFromTail(const DataType& data) {
-		Node* node = Tail;
-		while (node != NULL) {
-
-			if (EqualData(node->Val, data)) {
-				return node->Val;
-			}
-			node = node->Prev;
-		}
-		return NULL;
-	}
-
-	DataType FindItemFromHead(const DataType& data) {
-		Node* node = Head;
-		while (node != NULL) {
-
-			if (EqualData(node->Val, data)) {
-				return node->Val;
-			}
-			node = node->Next;
-		}
-		return NULL;
-	}
-
-	DataType GetHead() {
-		return Head->Val;
-	}
-
-	void AddItemAtTail(const DataType& data) {
-
-		Node* newNode = new Node();
-		newNode->Val = data;
-
-		if (EmptyStack()) {
-			Head = newNode;
-			Tail = newNode;
-
-			return;
-		}
-
-		Node* prevNode = Tail;
-
-		prevNode->Next = newNode;
-		newNode->Prev = prevNode;
-		Tail = newNode;
-
-	}
-
-	void AddItemAtHead(const DataType& data) {
-
-		Node* newNode = new Node();
-		newNode->Val = data;
-
-		if (EmptyStack()) {
-			Head = newNode;
-			Tail = newNode;
-
-			return;
-		}
-
-		Node* nextNode = Head;
-
-		nextNode->Prev = newNode;
-		newNode->Next = nextNode;
-		Head = newNode;
-
-	}
-
-	DataType PopTail() {
-
-		if (Head == Tail) {
-			DataType Save = Tail->Val;
-			Head = NULL;
-			Tail = NULL;
-			return Save;
-		}
-		DataType TailNodeSave = Tail->Val;
-		Node* TailNode = Tail;
-		Node* prevNode = TailNode->Prev;
-
-		prevNode->Next = NULL;
-		Tail = prevNode;
-
-		delete TailNode;
-		return TailNodeSave;
-	}
-
-	DataType PopHead() {
-		if (Head == Tail) {
-			DataType Save = Head->Val;
-			Head = NULL;
-			Tail = NULL;
-			return Save;
-		}
-
-		DataType HeadNodeSave = Head->Val;
-		Node* HeadNode = Head;
-		Node* nextNode = HeadNode->Next;
-
-		nextNode->Prev = NULL;
-		Head = nextNode;
-		delete HeadNode;
-		return HeadNodeSave;
-	}
-
-	void DeleteItemFromTail(const DataType& data) {
-		if (EmptyStack()) {
-			return;
-		}
-
-		Node* node = Tail;
-		if (Head == Tail && EqualData(node->Val, data)) {
-			Head = NULL;
-			Tail = NULL;
-
-			delete node;
-			return;
-		}
-
-		while (node != NULL) {
-			if (EqualData(node->Val, data)) {
-				if (node == Head) {
-					PopHead();
-					return;
-				}
-				else if (node == Tail) {
-					PopTail();
-					return;
-				}
-
-				Node* prevNode = node->Prev;
-				Node* nextNode = node->Next;
-
-				prevNode->Next = nextNode;
-				delete node;
-				return;
-			}
-			node = node->Prev;
-		}
-	}
-
-	void DeleteItemFromHead (const DataType& data) {
-		if (EmptyStack()) {
-			return;
-		}
-
-		Node* node = Head;
-		if (Head == Tail && EqualData(node->Val, data)) {
-			Head = NULL;
-			Tail = NULL;
-
-			delete node;
-			return;
-		}
-
-		while (node != NULL) {
-			if (EqualData(node->Val, data)) {
-
-				if (node == Head) {
-					PopHead();
-					return;
-				}
-				else if (node == Tail) {
-					PopTail();
-					return;
-				}
-
-				Node* prevNode = node->Prev;
-				Node* nextNode = node->Next;
-
-				prevNode->Next = nextNode;
-				delete node;
-				return;
-			}
-			node = node->Next;
-		}
-	}
-
-	void PrintStack() {
-
-		if (Head == NULL && Tail == NULL) {
-			cout << "\n\n--Current stack is empty--\n\n";
-			return;
-		}
-
-		Node* node = Head;
-		int c = 0;
-
-		cout << "\n\n--Start Stack Log--\n";
-
-		if constexpr (is_same<DataType, vec2>::value) {
-			while (node != NULL) {
-				cout << ++c << ". " << node->Val.real << " + " << node->Val.imagine << "i\n";
-				node = node->Next;
-			}
-		}else if constexpr(is_same<DataType, string>::value) {
-			while (node != NULL) {
-				cout << ++c << ". " << node->Val << "\n";
-				node = node->Next;
-			}
-		}else if constexpr (is_same<DataType, char>::value) {
-			while (node != NULL) {
-				cout << ++c << ". " << node->Val << "\n";
-				node = node->Next;
-			}
-		}else if constexpr (is_same<DataType, long double>::value) {
-			while (node != NULL) {
-				cout << ++c << ". " << node->Val << "\n";
-				node = node->Next;
-			}
-		}else if constexpr (is_same<DataType, HashMap>::value) {
-			while (node != NULL) {
-				cout << ++c << ". Key: " << node->Key << "Value: "<< node->Value << "\n";
-				node = node->Next;
-			}
-		}
-		cout << "--End Stack Log--\n\n";
-	}
-
-	void TestModVec() {
-
-		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
-		char UserInput = ' ';
-
-		vec2 data;
-
-		while (UserInput != '$') {
-			cin >> UserInput;
-			switch (UserInput) {
-			case '$':
-				cout << "--Test mod is off--";
-				break;
-			case 'm':
-				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
-				break;
-			case 'p':
-
-				PrintStack();
-				break;
-			case 't':
-
-				cin >> data.real;
-				AddItemAtTail(data);
-				break;
-			case 'h':
-
-				cin >> data.real;
-				AddItemAtHead(data);
-				break;
-			case 'T':
-
-				PopTail();
-				break;
-			case 'H':
-
-				PopHead();
-				break;
-			case 'd':
-
-				cin >> data.real;
-				DeleteItemFromTail(data);
-				break;
-			case 'D':
-
-				cin >> data.real;
-				DeleteItemFromHead(data);
-				break;
-			default:
-				cout << "Wrong commend\n";
-				break;
-			}
-		}
-	}
-
-	void TestModString() {
-
-		cout << "--Test mode of Node by Voskoboynik (m)--\n\n";
-		char UserInput = ' ';
-
-		string data;
-
-		while (UserInput != '$') {
-			cin >> UserInput;
-			switch (UserInput) {
-			case '$':
-				cout << "--Test mod is off--";
-				break;
-			case 'm':
-				cout << "--Menu--\n$.Stop\nt.Add at tail\nh.Add at head.\nT.Pop tail\nH.Pop head\nd.Delete from tail\nD.Delete from head\n\n";
-				break;
-			case 'p':
-
-				PrintStack();
-				break;
-			case 't':
-
-				cin >> data;
-				AddItemAtTail(data);
-				break;
-			case 'h':
-
-				cin >> data;
-				AddItemAtHead(data);
-				break;
-			case 'T':
-
-				PopTail();
-				break;
-			case 'H':
-
-				PopHead();
-				break;
-			case 'd':
-
-				cin >> data;
-				DeleteItemFromTail(data);
-				break;
-			case 'D':
-
-				cin >> data;
-				DeleteItemFromHead(data);
-				break;
-			default:
-				cout << "Wrong commend\n";
-				break;
-			}
-		}
-	}
-};
+empty() - empty() - пустой ли стек или нет
+*/
+#endif
