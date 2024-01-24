@@ -6,71 +6,139 @@
 
 typedef long double ld;
 
+
 class vec2 {
 public:
-	vec2(ld RealPart, ld ImaginaryPart):real(RealPart),imagine(ImaginaryPart){}
-	vec2(ld RealPart) :real(RealPart), imagine(0) {}
-	vec2() :real(0), imagine(0) {}
+	vec2(ld RealPart, ld ImaginaryPart):r(RealPart),i(ImaginaryPart){}
+	vec2(ld RealPart) :r(RealPart), i(0) {}
+	vec2() :r(0), i(0) {}
 public:
-	ld real;
-	ld imagine;
+	ld r;
+	ld i;
 
 public:
+	//"+"
 	const vec2& operator+(const vec2& num)const {
-		return vec2(this->real + num.real, this->imagine + num.imagine);
+		return vec2(this->r + num.r, this->i + num.i);
 	}
 	const vec2& operator+(const ld& num)const {
-		return vec2(this->real + num, this->imagine);
+		return vec2(this->r + num, this->i);
+	}
+	const vec2& operator+()const {
+		return *this;
 	}
 	vec2& operator+=(const vec2& num) {
-		this->real += num.real;
-		this->imagine += num.imagine;
+		this->r += num.r;
+		this->i += num.i;
 		return *this;
 	}
+	vec2& operator+=(const ld& num) {
+		this->r += num;
+		return *this;
+	}
+	//"-"
 	const vec2& operator-(const vec2& num)const {
-		return vec2(this->real - num.real, this->imagine - num.imagine);
+		return vec2(this->r - num.r, this->i - num.i);
 	}
 	const vec2& operator-(const ld& num)const {
-		return vec2(this->real - num, this->imagine);
+		return vec2(this->r - num, this->i);
 	}
-	vec2& operator-=(const vec2& num) {
-		this->real -= num.real;
-		this->imagine -= num.imagine;
+	const vec2& operator-()const {
+		return vec2(-this->r, -this->i);
+	}
+	const vec2& operator-=(const vec2& num) {
+		this->r -= num.r;
+		this->i -= num.i;
 		return *this;
 	}
+	const vec2& operator-=(const ld& num) {
+		this->r -= num;
+		return *this;
+	}
+	//"*"
 	const vec2& operator*(const vec2& num)const {
-		return vec2(this->real * num.real - this->imagine * num.imagine, this->real * num.imagine + this->imagine * num.real);
+		return vec2(this->r * num.r - this->i * num.i, this->r * num.i + this->i * num.r);
+	}
+	const vec2& operator*=(const vec2& num)const {
+		return vec2(this->r * num.r - this->i * num.i, this->r * num.i + this->i * num.r);
 	}
 	const vec2& operator*(const ld& num)const {
-		return vec2(this->real * num, this->imagine * num);
+		return vec2(this->r * num, this->i * num);
 	}
+	const vec2& operator*=(const ld& num)const {
+		return vec2(this->r * num, this->i * num);
+	}
+	// "/"
 	const vec2& operator/(const vec2& num)const {
-		if (num.imagine == 0 && num.real == 0) {
+		if (num.i == 0 && num.r == 0) {
 			return vec2();
 		}
-		return vec2((this->real * num.real + this->imagine * num.imagine) / (num.real * num.real + num.imagine * num.imagine), (num.real * this->imagine - this->real * num.imagine) / (num.real * num.real + num.imagine * num.imagine));
+		return vec2((this->r * num.r + this->i * num.i) / (num.r * num.r + num.i * num.i), (num.r * this->i - this->r * num.i) / (num.r * num.r + num.i * num.i));
 	}
+	const vec2& operator/=(const vec2& num)const {
+		if (num.i == 0 && num.r == 0) {
+			return vec2();
+		}
+		return vec2((this->r * num.r + this->i * num.i) / (num.r * num.r + num.i * num.i), (num.r * this->i - this->r * num.i) / (num.r * num.r + num.i * num.i));
+	}
+
 	const vec2& operator/(const ld& num)const {
 		if (num==(ld)0) {
 			return vec2();
 		}
-		return vec2(this->real/num,this->imagine/num);
+		return vec2(this->r/num,this->i/num);
+	}
+	const vec2& operator/=(const ld& num)const {
+		if (num == (ld)0) {
+			return vec2();
+		}
+		return vec2(this->r / num, this->i / num);
+	}
+	//Other
+	const vec2& operator=(const vec2& num){
+		this->r = num.r;
+		this->i = num.i;
+		return *this;
+	}
+	const vec2& operator=(const ld& num) {
+		this->r = num;
+		this->i = 0;
+		return *this;
+	}
+	const vec2& operator|=(const ld& num) {
+		this->i = num;
+		return *this;
 	}
 	const vec2& operator!() {
-		return vec2(this->real, -1 * this->imagine);
+		return vec2(this->r, -1 * this->i);
 	}
+	const vec2& operator~() {
+		return vec2(this->r/(this->r* this->r+ this->i* this->i),-this->i/((this->r * this->r + this->i * this->i)));
+	}
+	// Bools
 	bool operator==(const vec2& num) {	
-		return this->real == num.real && this->imagine == num.imagine;
+		return this->r == num.r && this->i == num.i;
+	}
+	bool operator==(const ld& num) {
+		return this->r == num;
 	}
 	bool operator!=(const vec2& num) {
-		return !(this->real == num.real && this->imagine == num.imagine);
+		return !(this->r == num.r && this->i == num.i);
 	}
+	bool operator!=(const ld& num) {
+		return !(this->r == num);
+	}
+	// in/out
 	friend std::ostream& operator<<(std::ostream& output, const vec2& num) {
-		if (num.imagine == (ld)0) {
-			output << num.real;
+		if (num.i == (ld)0) {
+			output << num.r;
 			return output;
 		}
-		output << num.real << "+" << num.imagine << "i";
+		if (num.i < 0) {
+			output << num.r <<num.i << "i";
+			return output;
+		}
+		output << num.r << "+" << num.i << "i";
 		return output;
 	}
 };
