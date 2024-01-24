@@ -1,5 +1,4 @@
 #pragma once
-//#include <iostream>
 
 
 class commands
@@ -11,16 +10,18 @@ private:
 		string key;
 		int value;
 	};
-	enum consts { start_size = 5, prime_size = 5, matrix_size = 5 };
+	enum consts { compute_size = 2, start_size = 5, prime_size = 5, matrix_size = 5, complex_size = 6};
 
 	//dictionaries
 	cmd_dict start_dict[start_size];
+	cmd_dict* compute_dict;
+	cmd_dict* complex_dict;
 	cmd_dict* matrix_dict;
 	cmd_dict* prime_dict;
 
 	//constructor - destructor control
 	int active_section;
-	enum sections { start = 0, matrix = 3, prime = 4 };
+	enum sections { start = 0, compute = 1, complex = 2, matrix = 3, prime = 4 };
 
 public:
 	commands()
@@ -47,6 +48,28 @@ public:
 		//create target dictionary
 		switch (section)
 		{
+		case compute:
+		{
+			active_section = compute;
+
+			compute_dict = new cmd_dict[compute_size];
+			compute_dict[0] = { "stop", 0 };
+			compute_dict[1] = { "back", 1 };
+			break;
+		}
+		case complex:
+		{
+			active_section = complex;
+
+			complex_dict = new cmd_dict[complex_size];
+			complex_dict[0] = { "stop", 0 };
+			complex_dict[1] = { "back", 1 };
+			complex_dict[2] = { "add", 2 };
+			complex_dict[3] = { "mult", 3 };
+			complex_dict[4] = { "div", 4 };
+			complex_dict[5] = { "sqrt", 5 };
+			break;
+		}
 		case matrix:
 		{
 			active_section = matrix;
@@ -57,7 +80,6 @@ public:
 			matrix_dict[2] = { "mult", 2 };
 			matrix_dict[3] = { "det",  3 };
 			matrix_dict[4] = { "rev",  4 };
-			cout << "matrix\n";
 			break;
 		}
 		case prime:
@@ -70,7 +92,6 @@ public:
 			prime_dict[2] = { "gcd",    2 };
 			prime_dict[3] = { "lcm",    3 };
 			prime_dict[4] = { "rabin",  4 };
-			cout << "prime\n";
 			break;
 		}
 		}
@@ -80,7 +101,7 @@ public:
 
 	//functions
 public:
-	int identify(string entered_command)
+	int identify(string entered_command)//identify command
 	{
 		switch (active_section)
 		{
@@ -91,7 +112,30 @@ public:
 				if (entered_command == start_dict[i].key)
 					return start_dict[i].value;
 			}
+			return -1;
+			break;
 		}
+		case compute:
+		{
+			for (int i = 0; i < compute_size; ++i)
+			{
+				if (entered_command == compute_dict[i].key)
+					return compute_dict[i].value;
+			}
+			return -1;
+			break;
+		}
+		case complex:
+		{
+			for (int i = 0; i < complex_size; ++i)
+			{
+				if (entered_command == complex_dict[i].key)
+					return complex_dict[i].value;
+			}
+			return -1;
+			break;
+		}
+		
 		case matrix:
 		{
 			for (int i = 0; i < matrix_size; ++i)
@@ -99,6 +143,8 @@ public:
 				if (entered_command == matrix_dict[i].key)
 					return matrix_dict[i].value;
 			}
+			return -1;
+			break;
 		}
 		case prime:
 		{
@@ -107,9 +153,9 @@ public:
 				if (entered_command == prime_dict[i].key)
 					return prime_dict[i].value;
 			}
-		}
-		default:
 			return -1;
+			break;
+		}
 		}
 	}
 
@@ -122,6 +168,12 @@ public:
 		//free memory
 		switch (active_section)
 		{
+		case compute:
+			delete[] compute_dict;
+			break;
+		case complex:
+			delete[] compute_dict;
+			break;
 		case matrix:
 			delete[] matrix_dict;
 			break;
