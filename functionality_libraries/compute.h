@@ -1,9 +1,10 @@
 #pragma once
+#include "commands.h"
 
 class Compute
 {
 private:
-	enum compute_cmds { stop = 0, back = 1, this_secetion = 1 };
+	enum compute_cmds { stop = 0, back = 1, cls = 2, this_secetion = 1 };
 	commands cmds;
 
 public:
@@ -12,23 +13,17 @@ public:
 	{
 		bool back = true;
 		bool& bk = back;
+		compute_meaning_interface();
 		while (st && bk)
 		{
-			compute_meaning_interface();
 			compute(st, bk);
 		}
 	}
 
 private:
 	//meaning iterface
-	void compute_meaning_interface() const
-	{
-		cout << "----------compute interface-------------" << "\n";
-		cout << "meanings" << "\n";
-		cout << "rules" << "\n";
-		cout << "range" << "\n";
-		cout << "enter expression to compute:" << "\n";
-	}
+	void compute_meaning_interface() const;
+	
 
 	void compute(bool& st, bool& bk)
 	{
@@ -48,8 +43,12 @@ private:
 			st = false;
 			break;
 		case back:
-			cout << "----------back-----------" << "\n\n";
+			system("cls");
 			bk = false;
+			break;
+		case cls:
+			system("cls");
+			compute_meaning_interface();
 			break;
 		default:
 			compute_implementation(entered_command);
@@ -59,7 +58,9 @@ private:
 
 	void compute_implementation(string entered_expression)
 	{
-		cout << "2 + 2 = " << entered_expression << "\n\n";
+
+		cout << entered_expression << " = something" <<"\n";
+		//cout << "press any key to go on" << "\n";
 	}
 };
 

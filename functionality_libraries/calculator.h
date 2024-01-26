@@ -1,8 +1,13 @@
 #pragma once
+#include "commands.h"
+
+#include "compute.h"
+#include "complex.h"
+
 class Calculator
 {
 private:
-	enum cmds_consts { stop = 0, compute = 1, complex = 2, matrix = 3, prime = 4 };
+	enum cmds_consts { stop = 0, cls = 2, compute = 101, complex = 102, matrix = 103 }; //prime = 104
 	commands cmds;
 
 	//sections
@@ -13,9 +18,6 @@ public:
 
 	void work(bool& st)
 	{
-		//iterface function
-		start_interface();
-
 		//porcess command
 		string entered_command = "";
 		getline(cin, entered_command);
@@ -31,31 +33,36 @@ public:
 			cout << "----------stop-----------" << "\n";
 			st = false;
 			break;
+		case cls:
+			system("cls");
+			start_interface();
+			break;
 		case compute:
+			system("cls");
 			cmpt.work(st);
+			start_interface();
 			break;
 		case complex:
+			system("cls");
 			cmplx.work(st);
+			start_interface();
 			break;
-		case prime:
+		//case matrix:
+
+		/*case prime:
 			cout << "prime" << "\n\n";
-			break;
+			break;*/
 		default:
-			cout << "wrong cmd" << "\n\n";
+			system("cls");
+			start_interface();
+			cmds.wrong_cmd();
 			break;
 		}
 	}
 
+public:
+	void start_interface() const;
 private:
-	void start_interface() const
-	{
-		cout << "--------------interface-------------" << "\n";
-		cout << "enter figure for chosing section\n"
-			<< "1 -------- compute ----------------------\n"
-			<< "2 -------- complex----------------------\n"
-			<< "3 -------- matrix ----------------------\n"
-			<< "4 -------- primes ----------------------\n"
-			<< "enter stop to turn off calculator\n"
-			<< "\n\n";
-	}
+
+	
 };

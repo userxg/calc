@@ -1,8 +1,10 @@
 #pragma once
+#include "commands.h"
+
 class Complex
 {
 private:
-	enum complex_cmds { stop = 0, back = 1, this_secetion = 2, add = 2, mult = 3, div = 4, sqrt = 5 };
+	enum complex_cmds { stop = 0, back = 1, cls = 2, this_secetion = 2, add = 101, mult = 102, div = 103, sqrt = 104 };
 	commands cmds;
 
 public:
@@ -11,9 +13,9 @@ public:
 	{
 		bool back = true;
 		bool& bk = back;
+		complex_interface();
 		while (st && bk)
 		{
-			complex_interface();
 			complex(st, bk);
 		}
 	}
@@ -39,8 +41,12 @@ private:
 			st = false;
 			break;
 		case back:
-			cout << "----------back-----------" << "\n\n";
+			system("cls");
 			bk = false;
+			break;
+		case cls:
+			system("cls");
+			complex_interface();
 			break;
 		case add:
 			addition();
@@ -50,6 +56,7 @@ private:
 			break;
 		case div:
 			division();
+			break;
 		case sqrt:
 			square();
 			break;
@@ -87,54 +94,17 @@ private:
 
 	//appearance
 private:
-	void complex_interface() const
-	{
-		cout << "----------complex interface-------------" << "\n";
-		cout << "-----------addtitoin--------------------" << "\n";
-		cout << "-----------multiplication--------------------" << "\n";
-		cout << "-----------division--------------------" << "\n";
-		cout << "-----------square--------------------" << "\n";
-		cout << "chose section:" << "\n";
-	}
 
+	//interfaces
+	//complex start interface
+	void complex_interface() const;
 
-	void addition_meaning_interface()
-	{
-		cout << "----------addition interface-------------" << "\n";
-		cout << "meanings" << "\n";
-		cout << "rules" << "\n";
-		cout << "range" << "\n";
-		cout << "enter two complex numbers:" << "\n";
-	}
-	void multiplication_meaning_interface()
-	{
-		cout << "----------multiplication interface-------------" << "\n";
-		cout << "meanings" << "\n";
-		cout << "rules" << "\n";
-		cout << "range" << "\n";
-		cout << "enter two complex numbers:" << "\n";
-	}
-	void division_meaning_interface()
-	{
-		cout << "---------division interface-------------" << "\n";
-		cout << "meanings" << "\n";
-		cout << "rules" << "\n";
-		cout << "range" << "\n";
-		cout << "enter two complex numbers:" << "\n";
-	}
-	void square_meaning_interface()
-	{
-		cout << "----------square interface-------------" << "\n";
-		cout << "meanings" << "\n";
-		cout << "rules" << "\n";
-		cout << "range" << "\n";
-		cout << "enter complex number:" << "\n";
-	}
+	//meaning interfaces
+	void addition_meaning_interface() const;
+	void multiplication_meaning_interface() const;
+	void division_meaning_interface() const;
+	void square_meaning_interface() const;
 
-
-
-	void wrong_command() const
-	{
-		cout << "wrong command\n";
-	}
+	//wrong
+	void wrong_command() const;
 };

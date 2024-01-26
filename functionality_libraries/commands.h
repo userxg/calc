@@ -10,10 +10,11 @@ private:
 		string key;
 		int value;
 	};
-	enum consts { compute_size = 2, start_size = 5, prime_size = 5, matrix_size = 5, complex_size = 6};
-
+	enum sizes { compute_size = 2, start_size = 5, prime_size = 5, matrix_size = 5, complex_size = 6};
+	enum cmds { back = 1, cls = 2 };
+	
 	//dictionaries
-	cmd_dict start_dict[start_size];
+	cmd_dict* start_dict;
 	cmd_dict* compute_dict;
 	cmd_dict* complex_dict;
 	cmd_dict* matrix_dict;
@@ -23,27 +24,23 @@ private:
 	int active_section;
 	enum sections { start = 0, compute = 1, complex = 2, matrix = 3, prime = 4 };
 
+
 public:
 	commands()
 	{
+		start_dict = new cmd_dict[start_size];
 		active_section = start;
 		//create start commands
 		start_dict[0] = { "stop",     0 };
-		start_dict[1] = { "compute",  1 };
-		start_dict[2] = { "complex",  2 };
-		start_dict[3] = { "matrix",   3 };
-		start_dict[4] = { "primes",   4 };
+		start_dict[1] = { "compute",  101 };
+		start_dict[2] = { "complex",  102 };
+		start_dict[3] = { "matrix",   103 };
+		start_dict[4] = { "primes",   104 };
 	}
 
 	commands(int section)
 	{
 
-		//create start commands
-		start_dict[0] = { "stop",     0 };
-		start_dict[1] = { "compute",  1 };
-		start_dict[2] = { "complex",  2 };
-		start_dict[3] = { "matrix",   3 };
-		start_dict[4] = { "primes",   4 };
 
 		//create target dictionary
 		switch (section)
@@ -54,7 +51,6 @@ public:
 
 			compute_dict = new cmd_dict[compute_size];
 			compute_dict[0] = { "stop", 0 };
-			compute_dict[1] = { "back", 1 };
 			break;
 		}
 		case complex:
@@ -63,11 +59,10 @@ public:
 
 			complex_dict = new cmd_dict[complex_size];
 			complex_dict[0] = { "stop", 0 };
-			complex_dict[1] = { "back", 1 };
-			complex_dict[2] = { "add", 2 };
-			complex_dict[3] = { "mult", 3 };
-			complex_dict[4] = { "div", 4 };
-			complex_dict[5] = { "sqrt", 5 };
+			complex_dict[1] = { "add", 101 };
+			complex_dict[2] = { "mult", 102 };
+			complex_dict[3] = { "div", 103 };
+			complex_dict[4] = { "sqrt", 104 };
 			break;
 		}
 		case matrix:
@@ -76,24 +71,22 @@ public:
 
 			matrix_dict = new cmd_dict[matrix_size];
 			matrix_dict[0] = { "stop", 0 };
-			matrix_dict[1] = { "back", 1 };
-			matrix_dict[2] = { "mult", 2 };
-			matrix_dict[3] = { "det",  3 };
-			matrix_dict[4] = { "rev",  4 };
+			matrix_dict[1] = { "mult", 101 };
+			matrix_dict[2] = { "det",  102 };
+			matrix_dict[3] = { "rev",  103 };
 			break;
 		}
-		case prime:
+	/*	case prime:
 		{
 			active_section = prime;
 
 			prime_dict = new cmd_dict[prime_size];
 			prime_dict[0] = { "stop",   0 };
-			prime_dict[1] = { "back",   1 };
-			prime_dict[2] = { "gcd",    2 };
-			prime_dict[3] = { "lcm",    3 };
-			prime_dict[4] = { "rabin",  4 };
+			prime_dict[2] = { "gcd",    101 };
+			prime_dict[3] = { "lcm",    102 };
+			prime_dict[4] = { "rabin",  103 };
 			break;
-		}
+		}*/
 		}
 	}
 
@@ -109,8 +102,9 @@ public:
 		{
 			for (int i = 0; i < start_size; ++i)
 			{
-				if (entered_command == start_dict[i].key)
+				if (entered_command == start_dict[i].key || entered_command == to_string((start_dict[i].value)%10))
 					return start_dict[i].value;
+				if (entered_command == "cls") return cls;
 			}
 			return -1;
 			break;
@@ -119,8 +113,11 @@ public:
 		{
 			for (int i = 0; i < compute_size; ++i)
 			{
-				if (entered_command == compute_dict[i].key)
+				
+				if (entered_command == compute_dict[i].key || entered_command == to_string((compute_dict[i].value)%10))
 					return compute_dict[i].value;
+				if (entered_command == "~" || entered_command == "back") return back;
+				if (entered_command == "cls") return cls;
 			}
 			return -1;
 			break;
@@ -129,8 +126,11 @@ public:
 		{
 			for (int i = 0; i < complex_size; ++i)
 			{
-				if (entered_command == complex_dict[i].key)
+				
+				if (entered_command == complex_dict[i].key || entered_command == to_string((complex_dict[i].value)%10))
 					return complex_dict[i].value;
+				if (entered_command == "~" || entered_command == "back") return back;
+				if (entered_command == "cls") return cls;
 			}
 			return -1;
 			break;
@@ -140,24 +140,30 @@ public:
 		{
 			for (int i = 0; i < matrix_size; ++i)
 			{
-				if (entered_command == matrix_dict[i].key)
+				if (entered_command == matrix_dict[i].key || entered_command == to_string((matrix_dict[i].value)%10))
 					return matrix_dict[i].value;
+				if (entered_command == "~" || entered_command == "back") return back;
+				if (entered_command == "cls") return cls;
 			}
 			return -1;
 			break;
 		}
-		case prime:
+		/*case prime:
 		{
 			for (int i = 0; i < prime_size; ++i)
 			{
-				if (entered_command == prime_dict[i].key)
+				if (entered_command == prime_dict[i].key || entered_command == to_string(prime_dict[i].value))
 					return prime_dict[i].value;
 			}
 			return -1;
 			break;
-		}
+		}*/
 		}
 	}
+
+
+	/// wrong command output
+	void wrong_cmd() const;
 
 
 
@@ -168,6 +174,8 @@ public:
 		//free memory
 		switch (active_section)
 		{
+		case start:
+			delete[] start_dict;
 		case compute:
 			delete[] compute_dict;
 			break;
@@ -177,9 +185,9 @@ public:
 		case matrix:
 			delete[] matrix_dict;
 			break;
-		case prime:
+		/*case prime:
 			delete[] prime_dict;
-			break;
+			break;*/
 		}
 	}
 };

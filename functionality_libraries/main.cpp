@@ -3,11 +3,6 @@
 
 using namespace std;
 
-#include "commands.h"
-
-#include "complex.h"
-#include "compute.h"
-
 #include "calculator.h"
 
 #define MAIN
@@ -21,6 +16,8 @@ int main()
 	bool& st = stop;
 	Calculator calc;
 
+
+	calc.start_interface();
 	while (st)
 	{
 		calc.work(st);
