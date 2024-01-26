@@ -3,6 +3,7 @@
 
 #include "compute.h"
 #include "complex.h"
+#include "matrix.h"
 
 class Calculator
 {
@@ -13,7 +14,7 @@ private:
 	//sections
 	Compute cmpt;
 	Complex cmplx;
-
+	Matrix mrx;
 public:
 
 	void work(bool& st)
@@ -47,6 +48,11 @@ public:
 			cmplx.work(st);
 			start_interface();
 			break;
+		case matrix:
+			system("cls");
+			mrx.work(st);
+			start_interface();
+			break;
 		//case matrix:
 
 		/*case prime:
@@ -55,14 +61,15 @@ public:
 		default:
 			system("cls");
 			start_interface();
-			cmds.wrong_cmd();
+			wrong_cmd();
 			break;
 		}
 	}
 
 public:
 	void start_interface() const;
-private:
 
+private:
+	void wrong_cmd() const;
 	
 };

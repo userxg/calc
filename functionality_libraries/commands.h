@@ -11,7 +11,7 @@ private:
 		int value;
 	};
 	enum sizes { compute_size = 2, start_size = 5, prime_size = 5, matrix_size = 5, complex_size = 6};
-	enum cmds { back = 1, cls = 2 };
+	enum cmds { stop = 0, back = 1, cls = 2, go = 3};
 	
 	//dictionaries
 	cmd_dict* start_dict;
@@ -22,7 +22,7 @@ private:
 
 	//constructor - destructor control
 	int active_section;
-	enum sections { start = 0, compute = 1, complex = 2, matrix = 3, prime = 4 };
+	enum sections { start = 0, compute = 1, complex = 2, matrix = 3, inside_matrix = 103};
 
 
 public:
@@ -48,9 +48,6 @@ public:
 		case compute:
 		{
 			active_section = compute;
-
-			compute_dict = new cmd_dict[compute_size];
-			compute_dict[0] = { "stop", 0 };
 			break;
 		}
 		case complex:
@@ -71,22 +68,11 @@ public:
 
 			matrix_dict = new cmd_dict[matrix_size];
 			matrix_dict[0] = { "stop", 0 };
-			matrix_dict[1] = { "mult", 101 };
-			matrix_dict[2] = { "det",  102 };
-			matrix_dict[3] = { "rev",  103 };
-			break;
+			matrix_dict[1] = { "det", 101 };
+			matrix_dict[2] = { "rev",  102 };
+			matrix_dict[3] = { "add",  103 };
+			matrix_dict[4] = { "mult",  104 };
 		}
-	/*	case prime:
-		{
-			active_section = prime;
-
-			prime_dict = new cmd_dict[prime_size];
-			prime_dict[0] = { "stop",   0 };
-			prime_dict[2] = { "gcd",    101 };
-			prime_dict[3] = { "lcm",    102 };
-			prime_dict[4] = { "rabin",  103 };
-			break;
-		}*/
 		}
 	}
 
@@ -102,23 +88,18 @@ public:
 		{
 			for (int i = 0; i < start_size; ++i)
 			{
-				if (entered_command == start_dict[i].key || entered_command == to_string((start_dict[i].value)%10))
+				if (entered_command == start_dict[i].key || entered_command == to_string((start_dict[i].value) % 10))
 					return start_dict[i].value;
-				if (entered_command == "cls") return cls;
 			}
+			if (entered_command == "cls") return cls;
 			return -1;
 			break;
 		}
 		case compute:
 		{
-			for (int i = 0; i < compute_size; ++i)
-			{
-				
-				if (entered_command == compute_dict[i].key || entered_command == to_string((compute_dict[i].value)%10))
-					return compute_dict[i].value;
-				if (entered_command == "~" || entered_command == "back") return back;
-				if (entered_command == "cls") return cls;
-			}
+			if (entered_command == "0" || entered_command == "stop") return stop;
+			if (entered_command == "~" || entered_command == "back") return back;
+			if (entered_command == "cls") return cls;
 			return -1;
 			break;
 		}
@@ -126,45 +107,31 @@ public:
 		{
 			for (int i = 0; i < complex_size; ++i)
 			{
-				
-				if (entered_command == complex_dict[i].key || entered_command == to_string((complex_dict[i].value)%10))
+
+				if (entered_command == complex_dict[i].key || entered_command == to_string((complex_dict[i].value) % 10))
 					return complex_dict[i].value;
-				if (entered_command == "~" || entered_command == "back") return back;
-				if (entered_command == "cls") return cls;
 			}
+			if (entered_command == "~" || entered_command == "back") return back;
+			if (entered_command == "cls") return cls;
 			return -1;
 			break;
 		}
-		
+
 		case matrix:
 		{
 			for (int i = 0; i < matrix_size; ++i)
 			{
-				if (entered_command == matrix_dict[i].key || entered_command == to_string((matrix_dict[i].value)%10))
+				if (entered_command == matrix_dict[i].key || entered_command == to_string((matrix_dict[i].value) % 10))
 					return matrix_dict[i].value;
-				if (entered_command == "~" || entered_command == "back") return back;
-				if (entered_command == "cls") return cls;
 			}
+
+			if (entered_command == "~" || entered_command == "back") return back;
+			if (entered_command == "cls") return cls;
 			return -1;
 			break;
 		}
-		/*case prime:
-		{
-			for (int i = 0; i < prime_size; ++i)
-			{
-				if (entered_command == prime_dict[i].key || entered_command == to_string(prime_dict[i].value))
-					return prime_dict[i].value;
-			}
-			return -1;
-			break;
-		}*/
 		}
 	}
-
-
-	/// wrong command output
-	void wrong_cmd() const;
-
 
 
 public:
@@ -176,9 +143,6 @@ public:
 		{
 		case start:
 			delete[] start_dict;
-		case compute:
-			delete[] compute_dict;
-			break;
 		case complex:
 			delete[] compute_dict;
 			break;

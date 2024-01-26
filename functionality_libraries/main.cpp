@@ -16,6 +16,7 @@ int main()
 	bool& st = stop;
 	Calculator calc;
 
+	
 
 	calc.start_interface();
 	while (st)
@@ -24,18 +25,3 @@ int main()
 	}
 }
 #endif 
-
-
-
-#ifdef TEST
-
-
-int main()
-{
-
-	return 0;
-}
-#endif // DEBUG
-
-
-

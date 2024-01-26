@@ -1,29 +1,30 @@
 #pragma once
 #include "commands.h"
 
-class Complex
+
+
+class Matrix
 {
 private:
-	enum complex_cmds { stop = 0, back = 1, cls = 2, this_secetion = 2, add = 101, mult = 102, div = 103, sqrt = 104 };
+	enum complex_cmds { stop = 0, back = 1, cls = 2, this_secetion = 3, det = 101, rev = 102, add = 103, mult = 104 };
 	commands cmds;
 
 public:
-	Complex() : cmds(this_secetion) {}
+	Matrix() : cmds(this_secetion) {}
 	void work(bool& st)
 	{
 		bool back = true;
 		bool& bk = back;
-		complex_interface();
+		matrix_interface();
 		while (st && bk)
 		{
-			complex(st, bk);
+			matrix(st, bk);
 		}
 	}
 
-	//logic
 private:
 
-	void complex(bool& st, bool& bk)
+	void matrix(bool& st, bool& bk)
 	{
 		string entered_command = "";
 		getline(cin, entered_command);
@@ -46,7 +47,13 @@ private:
 			break;
 		case cls:
 			system("cls");
-			complex_interface();
+			matrix_interface();
+			break;
+		case det:
+			determinant();
+			break;
+		case rev:
+			reverse();
 			break;
 		case add:
 			addition();
@@ -54,50 +61,41 @@ private:
 		case mult:
 			multiplication();
 			break;
-		case div:
-			division();
-			break;
-		case sqrt:
-			square();
-			break;
 		default:
 			wrong_command();
 			break;
 		}
 	}
 
-//implementations
-private:
+
+	void determinant()
+	{
+		cout << "determinant implementation" << "\n\n";
+	}
+
+	void reverse()
+	{
+		cout << "reverse matrix implementation" << "\n\n";
+	}
+
 	void addition()
 	{
-		cout << "vect1 + vect2" << "\n\n";
+		cout << "mat + mat implementation" << "\n\n";
 	}
 
 	void multiplication()
 	{
-		cout << "vect1 * vect2" << "\n\n";
+		cout << "mat * mat implementation" << "\n\n";
 
 	}
 
-	void division()
-	{
-		cout << "vect1 / vect2" << "\n\n";
-	}
-
-	void square()
-	{
-		cout << "vect1" << "\n\n";
-	}
-
-
-	//appearance
 
 private:
 
 	//interfaces
 	//complex start interface
-	void complex_interface() const;
-	void wrong_command() const;
+	void matrix_interface() const;
 
 	//wrong
+	void wrong_command() const;
 };

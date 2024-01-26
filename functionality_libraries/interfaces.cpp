@@ -19,6 +19,11 @@ void Calculator::start_interface() const
 		<< "\n\n";
 }
 
+void Calculator::wrong_cmd() const
+{
+	cout << "wrong commands" << "\n";
+}
+
 
 
 
@@ -39,55 +44,35 @@ void Compute::compute_meaning_interface() const
 void Complex::complex_interface() const
 {
 	cout << "----------complex interface-------------" << "\n";
-	cout << "-----------addtitoin--------------------" << "\n";
-	cout << "-----------multiplication--------------------" << "\n";
-	cout << "-----------division--------------------" << "\n";
-	cout << "-----------square--------------------" << "\n";
+	cout << "1  add  -----addtitoin--------------------" << "\n";
+	cout << "2  mult  ---multiplication--------------------" << "\n";
+	cout << "3  div ----division--------------------" << "\n";
+	cout << "4  sqrt ----square--------------------" << "\n";
+	cout << "---------somerules and info---------------" << "n";
 	cout << "chose section:" << "\n";
 }
-
-
-void Complex::addition_meaning_interface() const
-{
-	cout << "----------addition interface-------------" << "\n";
-	cout << "meanings" << "\n";
-	cout << "rules" << "\n";
-	cout << "range" << "\n";
-	cout << "enter two complex numbers:" << "\n";
-}
-void Complex::multiplication_meaning_interface() const
-{
-	cout << "----------multiplication interface-------------" << "\n";
-	cout << "meanings" << "\n";
-	cout << "rules" << "\n";
-	cout << "range" << "\n";
-	cout << "enter two complex numbers:" << "\n";
-}
-void Complex::division_meaning_interface() const
-{
-	cout << "---------division interface-------------" << "\n";
-	cout << "meanings" << "\n";
-	cout << "rules" << "\n";
-	cout << "range" << "\n";
-	cout << "enter two complex numbers:" << "\n";
-}
-void Complex::square_meaning_interface() const
-{
-	cout << "----------square interface-------------" << "\n";
-	cout << "meanings" << "\n";
-	cout << "rules" << "\n";
-	cout << "range" << "\n";
-	cout << "enter complex number:" << "\n";
-}
-
-
 
 void Complex::wrong_command() const
 {
 	cout << "wrong command\n";
 }
 
-void commands::wrong_cmd() const
+
+
+
+//commans (located insede calculator)
+void Matrix::matrix_interface() const
 {
-	cout << "wrong command" << "\n";
+	cout << "----------matrix interface-------------" << "\n";
+	cout << "1 - det   -----Determinant--------------------" << "\n";
+	cout << "2 - rev   -----Reverse--------------------" << "\n";
+	cout << "3 - add   ----addtitoin--------------------" << "\n";
+	cout << "4 - mult  ---multiplication--------------------" << "\n";
+	cout << "---------somerules and info---------------" << "\n";
+	cout << "chose section:" << "\n";
+}
+
+void Matrix::wrong_command() const
+{
+	cout << "wrong command\n";
 }

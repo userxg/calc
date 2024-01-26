@@ -59,8 +59,11 @@ private:
 	void compute_implementation(string entered_expression)
 	{
 
-		cout << entered_expression << " = something" <<"\n";
+		cout << entered_expression << " = something ûגאûגא" <<"\n";
 		//cout << "press any key to go on" << "\n";
 	}
 };
+
+
+
 
