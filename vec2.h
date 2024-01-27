@@ -134,6 +134,10 @@ public:
 			output << num.r;
 			return output;
 		}
+		if (num.r == (ld)0) {
+			output << num.i<<'i';
+			return output;
+		}
 		if (num.i < 0) {
 			output << num.r <<num.i << "i";
 			return output;

@@ -49,7 +49,7 @@ private:
 	void Correction(std::string& line) {
 		line = DeleteSpace(line);
 		if (!BracketsCorrectionCheck(line)) {
-			cout << "Wrong line format";
+			std::cout << "Wrong line format";
 			return;
 		}
 	}
@@ -66,17 +66,14 @@ private:
 		}
 	}
 
-	void CalRPN(const std::string& line) {
+	/*void CalRPN(const std::string& line) {
 
 		std::string buf;
 		for (char c : line) {
-			std::string ch(1, c);
 
-			if (IsNum(ch)) {
-				buf += ch;
-			}
+			
 		}
-	}
+	}*/
 
 	bool BracketsCorrectionCheck(const std::string line) {
 		sdll_c stack;
@@ -106,8 +103,17 @@ private:
 		return new_line;
 	}
 
-	bool IsNum(std::string c) {
-		return ("0" <= c && c <= "9") || c == ".";
+	bool IsNum(const char& c) {
+		return ('c' <= c && c <= 'c') || c == '.';
+	}
+
+	bool IsNum(const std::string& line) {
+		for (char c : line) {
+			if (!IsNum(c)) {
+				return false;
+			}
+		}
+		return true;
 	}
 };
 #endif
