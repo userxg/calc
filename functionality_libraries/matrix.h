@@ -1,5 +1,10 @@
 #pragma once
 #include "commands.h"
+#include <iostream>
+#include <vector>
+#include <matrix_func.h>
+using namespace std;
+
 
 
 
@@ -70,21 +75,27 @@ private:
 
 	void determinant()
 	{
+		double determinant(const vector<vector<double>>& matrix);
+
 		cout << "determinant implementation" << "\n\n";
 	}
 
 	void reverse()
 	{
+		vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix);
 		cout << "reverse matrix implementation" << "\n\n";
 	}
 
 	void addition()
 	{
+		vector<vector<double>> addMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2);
 		cout << "mat + mat implementation" << "\n\n";
 	}
 
 	void multiplication()
 	{
+		vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2) {
+
 		cout << "mat * mat implementation" << "\n\n";
 
 	}
