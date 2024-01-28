@@ -128,6 +128,31 @@ public:
 	bool operator!=(const ld& num) {
 		return !(this->r == num);
 	}
+	bool operator>(const vec2& num) {
+		return this->r>num.r;
+	}
+	bool operator>(const ld& num) {
+		return this->r > num;
+	}
+	bool operator<(const vec2& num) {
+		return this->r < num.r;
+	}
+	bool operator<(const ld& num) {
+		return this->r < num;
+	}
+	bool operator>=(const vec2& num) {
+		return this->r >= num.r;
+	}
+	bool operator>=(const ld& num) {
+		return this->r >= num;
+	}
+	bool operator<=(const vec2& num) {
+		return this->r <= num.r;
+	}
+	bool operator<=(const ld& num) {
+		return this->r <= num;
+	}
+
 	// in/out
 	friend std::ostream& operator<<(std::ostream& output, const vec2& num) {
 		if (num.i == (ld)0) {
