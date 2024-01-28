@@ -26,16 +26,15 @@ private:
 	sdll_op op;
 	sdll_vec nums;
 
-	HashMap<char> FuncVal;
-
 public:
 
 	GetPolishNotation() {
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
-			FuncVal.put(FunctionNames[i], FunctionValue[i]);
+			iF.put(FunctionNames[i], FunctionValue[i], FunctionPointers[i], FunctionLimitPointers[i], FunctionDataType[i]);
 		}
 	}
 
+	HashMap iF;
 	void printRPN()const {
 		std::cout << "\n\n--Revers Polish Notation Start--\n";
 		op.print();

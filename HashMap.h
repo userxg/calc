@@ -4,23 +4,32 @@
 
 #include <iostream>
 
-#define _CAPACITY_ 30
+#define _CAPACITY_ 100
 #define _PRIME_FOR_HASH_ 11
 
 typedef long long int lli;
 
-template <class ValueType>
 class HashMap {
 	class HashNode {
 	public:
-		HashNode() :Key(""), Value(NULL), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer, void* LimitPointer, std::string DataType) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType(DataType), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer,void* LimitPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType("ld"), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(nullptr), state(false) {}
+		HashNode(std::string Name,char Value) :Key(Name), FunctionValue(Value), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), state(false) {}
+		HashNode(std::string Name) :Key(Name), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), state(false) {}
+		HashNode() :Key(""), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), state(false) {}
 
 		std::string Key;
-		ValueType Value;
+
+		char FunctionValue;
+		void* FunctionPointer;
+		void* FunctionLimitPointer;
+		std::string DataType;
+
 		bool state;
 	public:
 		bool operator==(const HashNode& node) {
-			return this->Key == node.Key && this->Value == node.Value;
+			return this->Key == node.Key && this->FunctionValue == node.FunctionValue;
 		}
 	};
 
@@ -29,12 +38,15 @@ private:
 	HashNode HashArr[_CAPACITY_];
 
 public:
-	void put(const std::string& key, const ValueType& Value) {
+	void put(const std::string& key, const char FunctionValue,void* FunctionPointer, void* FunctionLimitPointer, const std::string& DataType) {
 		lli hash = CalculateHash(key);
 
 		if (HashArr[hash].state == false) {
 			HashArr[hash].Key = key;
-			HashArr[hash].Value = Value;
+			HashArr[hash].FunctionValue = FunctionValue;
+			HashArr[hash].FunctionPointer = FunctionPointer;
+			HashArr[hash].FunctionLimitPointer = FunctionLimitPointer;
+			HashArr[hash].DataType = DataType;
 			HashArr[hash].state = true;
 			return;
 		}
@@ -42,18 +54,21 @@ public:
 		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
 			if (HashArr[i].state == false) {
 				HashArr[hash].Key = key;
-				HashArr[hash].Value = Value;
+				HashArr[hash].FunctionValue = FunctionValue;
+				HashArr[hash].FunctionPointer = FunctionPointer;
+				HashArr[hash].FunctionLimitPointer = FunctionLimitPointer;
+				HashArr[hash].DataType = DataType;
 				HashArr[hash].state = true;
 				return;
 			}
 		}
 	}
 
-	ValueType get(const std::string& key) {
+	char getV(const std::string& key) {
 		lli hash = CalculateHash(key);
 
 		if (HashArr[hash].Key==key) {
-			return HashArr[hash].Value;
+			return HashArr[hash].FunctionValue;
 		}
 
 		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
@@ -62,18 +77,77 @@ public:
 			}
 
 			if (HashArr[i].Key == key) {
-				return HashArr[hash].Value;
+				return HashArr[hash].FunctionValue;
 			}
 		}
 		return NULL;
 	}
+
+	void* getP(const std::string& key) {
+		lli hash = CalculateHash(key);
+
+		if (HashArr[hash].Key == key) {
+			return HashArr[hash].FunctionPointer;
+		}
+
+		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
+			if (HashArr[i].state == false) {
+				return NULL;
+			}
+
+			if (HashArr[i].Key == key) {
+				return HashArr[hash].FunctionPointer;
+			}
+		}
+		return NULL;
+	}
+
+	void* getLP(const std::string& key) {
+		lli hash = CalculateHash(key);
+
+		if (HashArr[hash].Key == key) {
+			return HashArr[hash].FunctionLimitPointer;
+		}
+
+		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
+			if (HashArr[i].state == false) {
+				return NULL;
+			}
+
+			if (HashArr[i].Key == key) {
+				return HashArr[hash].FunctionLimitPointer;
+			}
+		}
+		return NULL;
+	}
+
+	std::string getDt(const std::string& key) {
+		lli hash = CalculateHash(key);
+
+		if (HashArr[hash].Key == key) {
+			return HashArr[hash].DataType;
+		}
+
+		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
+			if (HashArr[i].state == false) {
+				return NULL;
+			}
+
+			if (HashArr[i].Key == key) {
+				return HashArr[hash].DataType;
+			}
+		}
+		return NULL;
+	}
+
+
 
 	void del(const std::string& key) {
 		lli hash = CalculateHash(key);
 
 		if (HashArr[hash].Key == key) {
 			HashArr[hash].Key = "";
-			HashArr[hash].Value = NULL;
+			HashArr[hash].FunctionValue = NULL;
 			return;
 		}
 
@@ -84,7 +158,7 @@ public:
 
 			if (HashArr[i].Key == key) {
 				HashArr[hash].Key = "";
-				HashArr[hash].Value = NULL;
+				HashArr[hash].FunctionValue = NULL;
 				return;
 			}
 		}
