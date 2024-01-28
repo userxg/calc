@@ -2,7 +2,7 @@
 #include "commands.h"
 #include <iostream>
 #include <vector>
-#include <matrix_func.h>
+#include "matrix_func.h"
 using namespace std;
 
 
@@ -32,7 +32,7 @@ private:
 	void matrix(bool& st, bool& bk)
 	{
 		string entered_command = "";
-		getline(cin, entered_command);
+		cin>>entered_command;
 
 
 		for (int i = 0; i < entered_command.length(); ++i)
@@ -78,27 +78,31 @@ private:
 		double determinant(const vector<vector<double>>& matrix);
 
 		cout << "determinant implementation" << "\n\n";
+		void printMatrix(const vector<vector<double>>& matrix);
 	}
 
 	void reverse()
 	{
 		vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix);
 		cout << "reverse matrix implementation" << "\n\n";
+		void printMatrix(const vector<vector<double>>& matrix);
+
 	}
 
 	void addition()
 	{
 		vector<vector<double>> addMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2);
 		cout << "mat + mat implementation" << "\n\n";
+		void printMatrix(const vector<vector<double>>& matrix);
 	}
 
 	void multiplication()
 	{
-		vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2) {
+		vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2) ;
+		cout << "mat * mat implementation" << "\n\n";		
+		void printMatrix(const vector<vector<double>>& matrix);
+    }
 
-		cout << "mat * mat implementation" << "\n\n";
-
-	}
 
 
 private:
