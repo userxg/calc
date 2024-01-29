@@ -5,6 +5,7 @@ using namespace std;
 
 // Функция для вывода матрицы
 void printMatrix(const vector<vector<double>>& matrix) {
+    cout <<"\n" << "result:" << "\n";
     for (const auto& row : matrix) {
         for (double element : row) {
             cout << element << "\t";
@@ -164,5 +165,28 @@ vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, c
 
     return result;
 }
+
+vector<vector<double>> readMatrixFromInput() {
+    int rows, cols;
+
+    cout << "Enter the number of rows in the matrix: ";
+    cin >> rows;
+
+    cout << "Enter the number of columns in the matrix: ";
+    cin >> cols;
+
+    vector<vector<double>> matrix(rows, vector<double>(cols, 0.0));
+
+    cout << "Enter the elements of the matrix:" << endl;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            cout << "Element [" << i + 1 << "][" << j + 1 << "]: ";
+            cin >> matrix[i][j];
+        }
+    }
+
+    return matrix;
+}
+
 
 
