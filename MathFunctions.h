@@ -13,6 +13,11 @@ typedef long long int lli;
 
 // const_e const_pi ceil floor round rad fuct dfuct abs pow sqrt exp ln log W sin cos tg ctg sec cosec arcsin arccos arctg arcctg sh ch th cth sch csch P C
 
+vec2 add_vec2(const vec2& num, const vec2& num1);
+vec2 sub_vec2(const vec2& num, const vec2& num1);
+vec2 mul_vec2(const vec2& num, const vec2& num1);
+vec2 dev_vec2(const vec2& num, const vec2& num1);
+
 ld const_e();
 ld const_pi();
 
@@ -67,6 +72,22 @@ bool l_arc_vec2(const vec2& num);
 bool l_P_vec2(const lli& n, const lli& k);
 bool l_C_vec2(const lli& n, const lli& k);
 //General and const
+
+vec2 add_vec2(const vec2& num, const vec2& num1) {
+	return num + num1;
+}
+
+vec2 sub_vec2(const vec2& num, const vec2& num1) {
+	return num - num1;
+}
+
+vec2 mul_vec2(const vec2& num, const vec2& num1) {
+	return num* num1;
+}
+
+vec2 dev_vec2(const vec2& num, const vec2& num1) {
+	return num / num1;
+}
 
 vec2 trunc_vec2(const vec2& num) {
 	vec2 res;

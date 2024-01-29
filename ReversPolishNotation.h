@@ -5,6 +5,7 @@
 
 #include "DoubleLinkedStack.h"
 #include "HashMap.h"
+#include <string>
 
 #include "vec2.h"
 #include "MathFunctions.h"
@@ -23,8 +24,10 @@ typedef SDLL<char> sdll_c;
 class GetPolishNotation {
 private:
 
+	sdll_op opB;
 	sdll_op op;
 	sdll_vec nums;
+	HashMap iF;
 
 public:
 
@@ -34,13 +37,124 @@ public:
 		}
 	}
 
-	HashMap iF;
 	void printRPN()const {
 		std::cout << "\n\n--Revers Polish Notation Start--\n";
 		op.print();
 		std::cout << '\n';
 		nums.print();
 		std::cout<< "\n--Revers Polish Notation End--\n\n";
+	}
+
+	void rpn(std::string& line) {
+
+		Correction(line);
+
+		bool Im = false;
+		bool num = false;
+		bool oper = false;
+
+		std::string buf = "";
+		int i(0);
+		int length_line = line.length();
+		while (i < length_line) {
+			std::string c(1, line[i]);
+
+			if (c == ")") {
+
+			}
+
+			while(IsNum(c)){
+				if (i >= length_line) {
+					break;
+				}
+
+				std::string c(1, line[i]);
+				if (!IsNum(c)) {
+
+					if (Im == true) {
+
+						if (buf == "") {
+							nums.add(vec2(0, 1));
+						}
+						else {
+							nums.add(vec2(0, stold(buf)));
+						}
+
+						op.add("NUM");
+						buf = "";
+						Im = false;
+						break;
+					}
+					else {
+						nums.add(vec2(stold(buf)));
+						op.add("NUM");
+						buf = "";
+						break;
+					}
+
+					break;
+				}
+
+				if (c == "i") {
+					i++;
+					Im = true;
+				}
+				else {
+					buf += c;
+					i++;
+				}
+			}
+
+			while (!IsNum(c)) {
+				if (i >= length_line) {
+					break;
+				}
+
+				std::string c(1, line[i]);
+				if (IsNum(c)) {
+					break;
+				}
+				if (DefOp(c)) {
+
+					if (buf != "") {
+						op.add(buf);
+					}
+
+					op.add(c);
+					buf = "";
+					i++;
+					break;
+				}
+
+				buf += c;
+				i++;
+			}
+
+		}
+		if (IsNum(buf[0]) || line[length_line-1]=='i') {
+
+			if (Im == true) {
+				if (buf == "") {
+					nums.add(vec2(0, 1));
+					op.add("NUM");
+					Im = false;
+				}
+				else {
+					nums.add(vec2(0, stold(buf)));
+					op.add("NUM");
+					buf = "";
+					Im = false;
+				}
+			}
+			else {
+				nums.add(vec2(stold(buf)));
+				op.add("NUM");
+				buf = "";
+			}
+		}
+		else {
+			op.add(buf);
+		}
 	}
 
 private:
@@ -53,27 +167,6 @@ private:
 		}
 	}
 
-	void CalRPN(const std::string& line) {
-
-		std::string buf;
-		for (char c : line) {
-			std::string ch(1, c);
-
-			if (IsNum(ch)) {
-				buf += ch;
-			}
-		}
-	}
-
-	/*void CalRPN(const std::string& line) {
-
-		std::string buf;
-		for (char c : line) {
-
-			
-		}
-	}*/
-
 	bool BracketsCorrectionCheck(const std::string line) {
 		sdll_c stack;
 
@@ -84,9 +177,7 @@ private:
 			}
 			else if (c == ')' && stack.pop() == ')') {
 				stack.pop();
-
 			}
-
 		}
 		return stack.empty();
 	}
@@ -101,18 +192,19 @@ private:
 
 		return new_line;
 	}
-
-	bool IsNum(const char& c) {
-		return ('c' <= c && c <= 'c') || c == '.';
+	bool DefOp(const std::string& c) {
+		return c == "+" || c == "-" || c == "*" || c == "/";
 	}
 
-	bool IsNum(const std::string& line) {
-		for (char c : line) {
-			if (!IsNum(c)) {
-				return false;
-			}
-		}
-		return true;
+	bool IsLetter(const std::string& c) {
+		return c!="i" && (("a" <= c && c <= "z") || ("A" <= c && c <= "Z"));
+	}
+
+	bool IsNum(const std::string& c) {
+		return ("0" <= c && c <= "9") || c == "." || c=="i";
+	}
+	bool IsNum(const char& c) {
+		return ('0' <= c && c <= '9') || c == '.';
 	}
 };
 #endif
