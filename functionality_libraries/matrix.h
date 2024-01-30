@@ -42,7 +42,7 @@ private:
         switch (chosen_command)
         {
         case stop:
-            cout << "----------stop-----------" << "\n";
+            cout << "-----------------------[ stop ]-----------------------" << "\n";
             st = false;
             break;
         case back:
@@ -74,7 +74,7 @@ private:
 
     void determinant()
     {
-        cout << "----------------determinant-----------------" << "\n";
+        cout << "--------------------{ determinant }-------------------" << "\n";
         vector<vector<ld>> matrix = readMatrixFromInput();
         ld result = determinant(matrix);
         cout << "result:\n" << result;
@@ -82,7 +82,7 @@ private:
 
     void reverse()
     {
-        cout << "reverse matrix implementation" << "\n";
+        cout << "-----------{ reverse matrix implementation }----------" << "\n";
         vector<vector<ld>> matrix = readMatrixFromInput();
         vector<vector<ld>> result = inversematrix(matrix);
         if (result.size())
@@ -92,7 +92,7 @@ private:
 
     void addition()
     {
-        cout << "mat + mat implementation" << "\n";
+        cout << "-------------{ mat + mat implementation }-------------" << "\n";
         vector<vector<ld>> matrix1 = readMatrixFromInput();
         vector<vector<ld>> matrix2 = readMatrixFromInput();
         vector<vector<ld>> result = addmatrices(matrix1, matrix2);
@@ -102,7 +102,7 @@ private:
 
     void multiplication()
     {
-        cout << "mat * mat implementation" << "\n\n";
+        cout << "-------------{ mat * mat implementation }-------------" << "\n";
         vector<vector<ld>> matrix1 = readMatrixFromInput();
         vector<vector<ld>> matrix2 = readMatrixFromInput();
         vector<vector<ld>> result = multiplymatrices(matrix1, matrix2);
@@ -113,11 +113,11 @@ private:
 
 private:
 
-	//interfaces
-	//complex start interface
-	void matrix_interface() const;
+    //interfaces
+    //complex start interface
+    void matrix_interface() const;
 
-    void printMatrix(const vector<vector<ld>>& matrix)const 
+    void printMatrix(const vector<vector<ld>>& matrix)const
     {
         cout << "\n" << "result:" << "\n";
         for (const auto& row : matrix) {
@@ -139,7 +139,7 @@ private:
 
         vector<vector<ld>> matrix(rows, vector<ld>(cols, 0.0));
 
-        cout << "Enter the elements of the matrix:" << endl;
+        cout << "---------{ Enter the elements of the matrix: }--------" << "\n";
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 cout << "Element [" << i + 1 << "][" << j + 1 << "]: ";
@@ -192,20 +192,20 @@ private:
 
         return det;
     }
- 
+
     vector<vector<ld>> inversematrix(const vector<vector<ld>>& matrix) {
         int n = matrix.size();
 
-      
+
         if (n != matrix[0].size() || n > 3) {
-            cerr << "error: the inverse of the matrix cannot be found because the matrix is ​​not square or the maximum size of 3x3 has been exceeded.\n" << endl;
+            cerr << "error: the inverse of the matrix cannot be found because" << "\n" << "the matrix is ​​not square or the maximum size of 3x3 has been exceeded.\n" << endl;
             return vector<vector<ld>>();
         }
 
         ld det = determinant(matrix);
         if (det == 0.0) {
             cerr << "error: the inverse matrix cannot be found because the determinant is zero.\n" << endl;
-            return vector<vector<ld>>();  
+            return vector<vector<ld>>();
         }
 
 
@@ -250,13 +250,13 @@ private:
 
     vector<vector<ld>> addmatrices(const vector<vector<ld>>& matrix1, const vector<vector<ld>>& matrix2) {
         int rows1 = matrix1.size();
-        int cols1 = matrix1[0].size();  
+        int cols1 = matrix1[0].size();
         int rows2 = matrix2.size();
         int cols2 = matrix2[0].size();
 
         if (rows1 != rows2 || cols1 != cols2 || rows1 > 3 || cols1 > 3) {
             cerr << "error: matrices are of different sizes or exceed the maximum size of 3x3.\n" << endl;
-            return vector<vector<ld>>();  
+            return vector<vector<ld>>();
         }
 
         vector<vector<ld>> result(rows1, vector<ld>(cols1, 0.0));
@@ -279,7 +279,7 @@ private:
 
 
         if (cols1 != rows2 || rows1 > 3 || cols1 > 3 || cols2 > 3) {
-            cerr << "error: the matrices cannot be multiplied because the size conditions are not met or the maximum size of 3x3 is exceeded.\n" << endl;
+            cerr << "error: the matrices cannot be multiplied because the size" << "\n" << "conditions are not met or the maximum size of 3x3 is exceeded.\n" << endl;
             return vector<vector<ld>>();
         }
 
@@ -320,9 +320,8 @@ private:
     }
 
 
-	//wrong
-	void wrong_command() const;
+    //wrong
+    void wrong_command() const;
 };
-
 
 
