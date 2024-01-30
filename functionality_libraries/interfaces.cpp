@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
 using namespace std;
+typedef long double ld;
 #include "calculator.h"
 
 
@@ -17,7 +20,7 @@ void Calculator::start_interface() const
 	cout << "---------------------{ 3 matrix  }--------------------" << "\n";
 	cout << "------------[ info: '0' or 'stop' for off  ]----------" << "\n";
 	cout << "-------------------[ chose section: ]-----------------" << "\n";
-	cout << "\n\n";
+	cout << "\n";
 }
 
 void Calculator::wrong_cmd() const

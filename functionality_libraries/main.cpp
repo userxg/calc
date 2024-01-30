@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
+typedef long double ld;
 
 #include "calculator.h"
 
@@ -25,3 +27,5 @@ int main()
 	}
 }
 #endif 
+
+
