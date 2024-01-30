@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#define _CAPACITY_ 100
+#define _CAPACITY_ 40
 #define _PRIME_FOR_HASH_ 11
 
 typedef long long int lli;
@@ -12,12 +12,12 @@ typedef long long int lli;
 class HashMap {
 	class HashNode {
 	public:
-		HashNode(std::string Name, char Value, void* FuncPointer, void* LimitPointer, std::string DataType) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType(DataType), state(false) {}
-		HashNode(std::string Name, char Value, void* FuncPointer,void* LimitPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType("ld"), state(false) {}
-		HashNode(std::string Name, char Value, void* FuncPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(nullptr), state(false) {}
-		HashNode(std::string Name,char Value) :Key(Name), FunctionValue(Value), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), state(false) {}
-		HashNode(std::string Name) :Key(Name), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), state(false) {}
-		HashNode() :Key(""), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer, void* LimitPointer, std::string DataType, char NumInputs) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType(DataType), FunctionsNumInputs(NumInputs), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer,void* LimitPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType("ld"), FunctionsNumInputs(0), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(nullptr), FunctionsNumInputs(0), state(false) {}
+		HashNode(std::string Name,char Value) :Key(Name), FunctionValue(Value), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), state(false) {}
+		HashNode(std::string Name) :Key(Name), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), state(false) {}
+		HashNode() :Key(""), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), state(false) {}
 
 		std::string Key;
 
@@ -25,6 +25,7 @@ class HashMap {
 		void* FunctionPointer;
 		void* FunctionLimitPointer;
 		std::string DataType;
+		char FunctionsNumInputs;
 
 		bool state;
 	public:
@@ -38,7 +39,7 @@ private:
 	HashNode HashArr[_CAPACITY_];
 
 public:
-	void put(const std::string& key, const char FunctionValue,void* FunctionPointer, void* FunctionLimitPointer, const std::string& DataType) {
+	void put(const std::string& key, const char FunctionValue,void* FunctionPointer, void* FunctionLimitPointer, const std::string& DataType, const char& NumInputs) {
 		lli hash = CalculateHash(key);
 
 		if (HashArr[hash].state == false) {
@@ -47,18 +48,20 @@ public:
 			HashArr[hash].FunctionPointer = FunctionPointer;
 			HashArr[hash].FunctionLimitPointer = FunctionLimitPointer;
 			HashArr[hash].DataType = DataType;
+			HashArr[hash].FunctionsNumInputs = NumInputs;
 			HashArr[hash].state = true;
 			return;
 		}
 
 		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
 			if (HashArr[i].state == false) {
-				HashArr[hash].Key = key;
-				HashArr[hash].FunctionValue = FunctionValue;
-				HashArr[hash].FunctionPointer = FunctionPointer;
-				HashArr[hash].FunctionLimitPointer = FunctionLimitPointer;
-				HashArr[hash].DataType = DataType;
-				HashArr[hash].state = true;
+				HashArr[i].Key = key;
+				HashArr[i].FunctionValue = FunctionValue;
+				HashArr[i].FunctionPointer = FunctionPointer;
+				HashArr[i].FunctionLimitPointer = FunctionLimitPointer;
+				HashArr[i].DataType = DataType;
+				HashArr[i].FunctionsNumInputs = NumInputs;
+				HashArr[i].state = true;
 				return;
 			}
 		}
@@ -77,7 +80,7 @@ public:
 			}
 
 			if (HashArr[i].Key == key) {
-				return HashArr[hash].FunctionValue;
+				return HashArr[i].FunctionValue;
 			}
 		}
 		return NULL;
@@ -96,7 +99,7 @@ public:
 			}
 
 			if (HashArr[i].Key == key) {
-				return HashArr[hash].FunctionPointer;
+				return HashArr[i].FunctionPointer;
 			}
 		}
 		return NULL;
@@ -115,7 +118,7 @@ public:
 			}
 
 			if (HashArr[i].Key == key) {
-				return HashArr[hash].FunctionLimitPointer;
+				return HashArr[i].FunctionLimitPointer;
 			}
 		}
 		return NULL;
@@ -134,7 +137,26 @@ public:
 			}
 
 			if (HashArr[i].Key == key) {
-				return HashArr[hash].DataType;
+				return HashArr[i].DataType;
+			}
+		}
+		return NULL;
+	}
+
+	char getNInp(const std::string& key) {
+		lli hash = CalculateHash(key);
+
+		if (HashArr[hash].Key == key) {
+			return HashArr[hash].FunctionsNumInputs;
+		}
+
+		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
+			if (HashArr[i].state == false) {
+				return NULL;
+			}
+
+			if (HashArr[i].Key == key) {
+				return HashArr[i].FunctionsNumInputs;
 			}
 		}
 		return NULL;
@@ -157,8 +179,8 @@ public:
 			}
 
 			if (HashArr[i].Key == key) {
-				HashArr[hash].Key = "";
-				HashArr[hash].FunctionValue = NULL;
+				HashArr[i].Key = "";
+				HashArr[i].FunctionValue = NULL;
 				return;
 			}
 		}

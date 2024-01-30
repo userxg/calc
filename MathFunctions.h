@@ -9,7 +9,7 @@ typedef long double ld;
 typedef long long int lli;
 
 #define _APPROXIMATION_ 1e-15
-#define _TERMS_IN_SUM_ 31
+#define _TERMS_IN_SUM_ 21
 
 // const_e const_pi ceil floor round rad fuct dfuct abs pow sqrt exp ln log W sin cos tg ctg sec cosec arcsin arccos arctg arcctg sh ch th cth sch csch P C
 
@@ -308,7 +308,7 @@ vec2 sin_vec2(const vec2& num) {
 		res+= term * sign;
 		sign *= -1;
 		n += 2;
-	} while (n< _TERMS_IN_SUM_);
+	} while (n<_TERMS_IN_SUM_);
 
 	return res;
 }

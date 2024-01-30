@@ -15,12 +15,6 @@ typedef SDLL<vec2> sdll_vec;
 typedef SDLL<std::string> sdll_op;
 typedef SDLL<char> sdll_c;
 
-/*
-
-Есть функция на проверку скобок ( '(' и ')' ) и удаление пробелов - BracketsCorrectionCheck(line), DeleteSpace(line) соотв. 
-
-*/
-
 class GetPolishNotation {
 private:
 
@@ -33,7 +27,7 @@ public:
 
 	GetPolishNotation() {
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
-			iF.put(FunctionNames[i], FunctionValue[i], FunctionPointers[i], FunctionLimitPointers[i], FunctionDataType[i]);
+			iF.put(FunctionNames[i], FunctionValue[i], FunctionPointers[i], FunctionLimitPointers[i], FunctionDataType[i], FunctionsNumInputs[i]);
 		}
 	}
 
@@ -48,10 +42,9 @@ public:
 	void rpn(std::string& line) {
 
 		Correction(line);
+		std::cout << "The expration: " << line << '\n';
 
 		bool Im = false;
-		bool num = false;
-		bool oper = false;
 
 		std::string buf = "";
 		int i(0);
@@ -59,8 +52,17 @@ public:
 		while (i < length_line) {
 			std::string c(1, line[i]);
 
-			if (c == ")") {
+			if (c == "(") {
+				opB.add(c);
+				i++;
+			}
 
+			if (c == ")") {
+				while (!opB.empty() && opB.get() != "(") {
+					op.add(opB.pop());
+				}
+				opB.pop();
+				i++;
 			}
 
 			while(IsNum(c)){
@@ -72,26 +74,21 @@ public:
 				if (!IsNum(c)) {
 
 					if (Im == true) {
-
 						if (buf == "") {
 							nums.add(vec2(0, 1));
 						}
 						else {
 							nums.add(vec2(0, stold(buf)));
 						}
-
 						op.add("NUM");
-						buf = "";
 						Im = false;
-						break;
 					}
 					else {
 						nums.add(vec2(stold(buf)));
 						op.add("NUM");
-						buf = "";
-						break;
 					}
 
+					buf = "";
 					break;
 				}
 
@@ -106,65 +103,125 @@ public:
 			}
 
 			while (!IsNum(c)) {
-				if (i >= length_line) {
-					break;
-				}
-
 				std::string c(1, line[i]);
-				if (IsNum(c)) {
-					break;
-				}
-				if (DefOp(c)) {
 
-					if (buf != "") {
-						op.add(buf);
+				if (i >= length_line || c == "(" || c == ")" || IsNum(c)) {
+					if (!(c == "i" && !IsNum(line[i-1]))) {
+						break;
 					}
-
-					op.add(c);
-					buf = "";
-					i++;
-					break;
 				}
 
 				buf += c;
 				i++;
+
+				if (iF.getV(buf)) {
+					while (!opB.empty() && iF.getV(buf) <= iF.getV(opB.get())) {
+						op.add(opB.pop());
+					}
+					opB.add(buf);
+					buf = "";
+				}
+
 			}
 
 		}
 		if (IsNum(buf[0]) || line[length_line-1]=='i') {
-
 			if (Im == true) {
 				if (buf == "") {
 					nums.add(vec2(0, 1));
 					op.add("NUM");
-					Im = false;
 				}
 				else {
 					nums.add(vec2(0, stold(buf)));
 					op.add("NUM");
-					buf = "";
-					Im = false;
 				}
 			}
 			else {
 				nums.add(vec2(stold(buf)));
 				op.add("NUM");
-				buf = "";
 			}
 		}
 		else {
-			op.add(buf);
+			if (buf != "") {
+				op.add(buf);
+			}
 		}
+
+		while (!opB.empty()) {
+			op.add(opB.pop());
+		}
+
+		eval();
+	}
+
+	void eval() {
+
+		printRPN();
+		sdll_vec buf;
+		while (!op.empty()) {
+
+			std::string oper = op.getH();
+			if (oper == "NUM") {
+				buf.add(nums.popH());
+				op.popH();
+			}
+			else {
+				char numInp = iF.getNInp(op.getH());
+				std::string DataType = iF.getDt(op.getH());
+
+				//std::cout << oper << " " << (int)numInp << " " << DataType << '\n';
+				if (numInp == 1) {
+					
+					if (DataType == "vec2") {
+						vec2 resNum = ((vec2(*)(vec2))iF.getP(oper))(buf.pop());
+						buf.add(resNum);
+						//std::cout << resNum << '\n';
+					}
+				}
+				else if (numInp == 2) {
+					if (DataType == "vec2") {
+						vec2 resNum = ((vec2(*)(vec2,vec2))iF.getP(oper))(buf.pop(), buf.pop());
+						buf.add(resNum);
+						//std::cout << resNum << '\n';
+					}
+				}
+
+				op.popH();
+			}
+		}
+		std::cout << "Result: ";
+		buf.print();
 	}
 
 private:
 
 	void Correction(std::string& line) {
-		line = DeleteSpace(line);
+		DeleteSpace(line);
 		if (!BracketsCorrectionCheck(line)) {
-			std::cout << "Wrong line format";
+			std::cout << "Wrong line format: Check Brackets for correction";
 			return;
 		}
+		FixLayers(line);
+	}
+
+	void FixLayers(std::string& line) {
+		std::string new_line = "";
+
+		if (line[0] == '-' || line[0] == '+') {
+			new_line += '0';
+		}
+
+		for (int i = 0; i < line.length(); i++) {
+
+			if (line[i] == '(' && (line[i+1]=='+' || line[i+1]=='-')) {
+				new_line += '(';
+				new_line += '0';
+			}
+			else {
+				new_line += line[i];
+			}
+		}
+		line = new_line;
 	}
 
 	bool BracketsCorrectionCheck(const std::string line) {
@@ -182,7 +239,7 @@ private:
 		return stack.empty();
 	}
 
-	std::string DeleteSpace(std::string line) {
+	void DeleteSpace(std::string& line) {
 		std::string new_line = "";
 
 		for (char c : line) {
@@ -190,7 +247,7 @@ private:
 				new_line += c;
 		}
 
-		return new_line;
+		line = new_line;
 	}
 	bool DefOp(const std::string& c) {
 		return c == "+" || c == "-" || c == "*" || c == "/";
