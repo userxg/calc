@@ -3,15 +3,24 @@
 
 using namespace std;
 
-// Функция для вывода матрицы
+// Функции для вывода матрицы
+bool isMatrixEmpty(const vector<vector<double>>& matrix) {
+    return matrix.empty() || matrix[0].empty();
+}
+
+
 void printMatrix(const vector<vector<double>>& matrix) {
-    cout << "\n" << "result:" << "\n";
-    for (const auto& row : matrix) {
-        for (double element : row) {
-            cout << element << "\t";
+    if (!(isMatrixEmpty(matrix))) {
+        cout << "\n" << "result:" << "\n";
+        for (const auto& row : matrix) {
+            for (double element : row) {
+                cout << element << "\t";
+            }
+            cout << endl;
         }
-        cout << endl;
+
     }
+    
 }
 
 // Функция для вычисления минора матрицы
