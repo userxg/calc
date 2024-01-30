@@ -75,7 +75,7 @@ private:
 
 	void determinant()
 	{
-		readMatrixFromInput();
+		vector<vector<double>> matrix = readMatrixFromInput();
 		double determinant(const vector<vector<double>>& matrix);
 
 		cout << "determinant implementation" << "\n\n";
@@ -84,7 +84,7 @@ private:
 
 	void reverse()
 	{
-		readMatrixFromInput();
+		vector<vector<double>> matrix = readMatrixFromInput();
 		vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix);
 		cout << "reverse matrix implementation" << "\n\n";
 		void printMatrix(const vector<vector<double>>& matrix);
@@ -93,7 +93,7 @@ private:
 
 	void addition()
 	{
-		readMatrixFromInput();
+		vector<vector<double>> matrix = readMatrixFromInput();
 		vector<vector<double>> addMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2);
 		cout << "mat + mat implementation" << "\n\n";
 		void printMatrix(const vector<vector<double>>& matrix);
@@ -101,7 +101,7 @@ private:
 
 	void multiplication()
 	{
-		readMatrixFromInput();
+		vector<vector<double>> matrix = readMatrixFromInput();
 		vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2) ;
 		cout << "mat * mat implementation" << "\n\n";		
 		void printMatrix(const vector<vector<double>>& matrix);

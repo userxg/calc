@@ -5,7 +5,7 @@ using namespace std;
 
 // Функция для вывода матрицы
 void printMatrix(const vector<vector<double>>& matrix) {
-    cout <<"\n" << "result:" << "\n";
+    cout << "\n" << "result:" << "\n";
     for (const auto& row : matrix) {
         for (double element : row) {
             cout << element << "\t";
@@ -37,7 +37,7 @@ double determinant(const vector<vector<double>>& matrix) {
 
     // Проверка на квадратность матрицы
     if (n != matrix[0].size()) {
-        cerr << "Error: Matrix is ​​not square." << endl;
+        cerr << "Error: Matrix is not square." << endl;
         return 0.0;
     }
 
@@ -57,17 +57,16 @@ double determinant(const vector<vector<double>>& matrix) {
 
     return det;
 }
+
 // Функция для нахождения обратной матрицы методом Гаусса-Жордана
 vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix) {
     int n = matrix.size();
 
     // Проверка на квадратность матрицы и ограничение размера до 3x3
-    if (n != matrix[0].size() || n > 3 ) {
-        cerr << "Error: The inverse of the matrix cannot be found because the matrix is ​​not square or the maximum size of 3x3 has been exceeded." << endl;
-        return vector<vector<double>>();  
+    if (n != matrix[0].size() || n > 3) {
+        cerr << "Error: The inverse of the matrix cannot be found because the matrix is not square or the maximum size of 3x3 has been exceeded." << endl;
+        return vector<vector<double>>();
     }
-
-    
 
     // Проверка на ненулевой детерминант
     double det = determinant(matrix);
@@ -76,7 +75,6 @@ vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix) {
         return vector<vector<double>>();  // Возвращаем пустую матрицу
     }
 
-   
     vector<vector<double>> augmentedMatrix(n, vector<double>(2 * n, 0.0));
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -85,14 +83,11 @@ vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix) {
         }
     }
 
-
     for (int i = 0; i < n; ++i) {
-      
         double pivot = augmentedMatrix[i][i];
         for (int j = 0; j < 2 * n; ++j) {
             augmentedMatrix[i][j] /= pivot;
         }
-
 
         for (int k = 0; k < n; ++k) {
             if (k != i) {
@@ -104,7 +99,6 @@ vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix) {
         }
     }
 
- 
     vector<vector<double>> inverse(n, vector<double>(n, 0.0));
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -117,7 +111,7 @@ vector<vector<double>> inverseMatrix(const vector<vector<double>>& matrix) {
 
 // Функция для сложения двух матриц
 vector<vector<double>> addMatrices(const vector<vector<double>>& matrix1, const vector<vector<double>>& matrix2) {
-     int rows1 = matrix1.size();
+    int rows1 = matrix1.size();
     int cols1 = matrix1[0].size();  // Предполагаем, что матрицы имеют одинаковый размер
     int rows2 = matrix2.size();
     int cols2 = matrix2[0].size();
@@ -149,7 +143,7 @@ vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, c
     // Проверка на возможность умножения матриц и ограничение на размер до 3x3
     if (cols1 != rows2 || rows1 > 3 || cols1 > 3 || cols2 > 3) {
         cerr << "Error: The matrices cannot be multiplied because the size conditions are not met or the maximum size of 3x3 is exceeded." << endl;
-        return vector<vector<double>>();  
+        return vector<vector<double>>();
     }
 
     vector<vector<double>> result(rows1, vector<double>(cols2, 0.0));
@@ -161,7 +155,6 @@ vector<vector<double>> multiplyMatrices(const vector<vector<double>>& matrix1, c
             }
         }
     }
-    
 
     return result;
 }
@@ -188,5 +181,19 @@ vector<vector<double>> readMatrixFromInput() {
     return matrix;
 }
 
+int main() {
+    // Пример использования функций
+    vector<vector<double>> matrix1 = readMatrixFromInput();
+    vector<vector<double>> matrix2 = readMatrixFromInput();
 
+    vector<vector<double>> sum = addMatrices(matrix1, matrix2);
+    printMatrix(sum);
 
+    vector<vector<double>> product = multiplyMatrices(matrix1, matrix2);
+    printMatrix(product);
+
+    vector<vector<double>> inverseMat = inverseMatrix(matrix1);
+    printMatrix(inverseMat);
+
+    return 0;
+}
