@@ -190,19 +190,3 @@ vector<vector<double>> readMatrixFromInput() {
     return matrix;
 }
 
-int main() {
-    // Пример использования функций
-    vector<vector<double>> matrix1 = readMatrixFromInput();
-    vector<vector<double>> matrix2 = readMatrixFromInput();
-
-    vector<vector<double>> sum = addMatrices(matrix1, matrix2);
-    printMatrix(sum);
-
-    vector<vector<double>> product = multiplyMatrices(matrix1, matrix2);
-    printMatrix(product);
-
-    vector<vector<double>> inverseMat = inverseMatrix(matrix1);
-    printMatrix(inverseMat);
-
-    return 0;
-}
