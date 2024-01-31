@@ -78,7 +78,7 @@ vec2 add_vec2(const vec2& num, const vec2& num1) {
 }
 
 vec2 sub_vec2(const vec2& num, const vec2& num1) {
-	return num - num1;
+	return num1-num;
 }
 
 vec2 mul_vec2(const vec2& num, const vec2& num1) {
@@ -192,9 +192,9 @@ vec2 power_vec2(const vec2& base, lli power) {
 	return (power % 2 == 0) ? p : base * p;
 }
 
-vec2 pow_vec2(const vec2& base, const vec2& power) {
-	vec2 res = ln_vec2(base);
-	res = res* power;
+vec2 pow_vec2(const vec2& a, const vec2& b) {
+	vec2 res = ln_vec2(b);
+	res = res * a;
 	res = exp_vec2(res);
 	return res;
 }
@@ -238,15 +238,20 @@ ld const_pi() {
 }
 
 vec2 exp_vec2(const vec2& num) {
+
+	if (num.i != 0) {
+		return exp_vec2(num.r) * (vec2(cos_vec2(num.i).r, sin_vec2(num.i).r));
+	}
+
 	vec2 res = num + 1;
 
-	int n = 2;
-	vec2 term;
+	int n = 1;
+	vec2 term = num;
 	do {
-		term = power_vec2(num, n) / fuct_vec2(n);
+		term = term*num/(n+1);
 		res += term;
 		n++;
-	} while (n<_TERMS_IN_SUM_);
+	} while (n<_TERMS_IN_SUM_*(num.i/2+num.r/2));
 
 	return res;
 }
@@ -264,15 +269,13 @@ vec2 ln_vec2(const vec2& num) {
 	vec2 numb = num - 1;
 	vec2 res = numb;
 
-	int sign = -1;
-	int n = 2;
-	vec2 term;
+	int n = 1;
+	vec2 term = numb;
 	do {
-		term = power_vec2(numb, n) / n;
-		res += term * sign;
-		sign *= -1;
+		term = term*((numb*n*-1)/(n+1));
+		res += term;
 		n++;
-	} while (term.r>_APPROXIMATION_ || term.r<-_APPROXIMATION_);
+	} while (term.r>_APPROXIMATION_ || term.r < -_APPROXIMATION_);
 
 	return res;
 }
@@ -284,7 +287,7 @@ vec2 log_vec2(const vec2& base, const vec2& num) {
 vec2 W_vec2(const vec2& num) {
 	vec2 res = num-num*num;
 	int n = 3;
-	int sign = 1;
+	int sign = 1;	
 
 	vec2 term;
 	do {
@@ -298,33 +301,32 @@ vec2 W_vec2(const vec2& num) {
 
 //Trinometry
 vec2 sin_vec2(const vec2& num) {
+	
 	vec2 res = num;
-	int sign = -1;
-	int n = 3;
 
-	vec2 term;
+	int n = 0;
+	vec2 term = num;
+
 	do {
-		term = power_vec2(num, n)/fuct_vec2(n);
-		res+= term * sign;
-		sign *= -1;
-		n += 2;
-	} while (n<_TERMS_IN_SUM_);
+		term = term*(num * num* (-1) / ((2 * n + 2) * (2 * n+ 3)));
+		res += term;
+		n++;
+	} while (term.r > _APPROXIMATION_ || term.r < -_APPROXIMATION_);
 
 	return res;
 }
 
 vec2 cos_vec2(const vec2& num) {
-	vec2 res = 1;
-	int sign = -1;
-	int n = 2;
+	vec2 res(1);
 
-	vec2 term;
+	int n = 1;
+	vec2 term(1);
 	do {
-		term = power_vec2(num, n) / fuct_vec2(n);
-		res += term * sign;
-		sign *= -1;
-		n += 2;
-	} while (n < _TERMS_IN_SUM_ );
+		term = term * (num * num * (-1) / ((2 * n - 1) * (2 * n)));
+		res += term;
+		n++;
+	} while (term.r > _APPROXIMATION_ || term.r < -_APPROXIMATION_);
+
 
 	return res;
 }

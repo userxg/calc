@@ -107,6 +107,9 @@ public:
 	DataType pop() {
 
 		if (Head == Tail) {
+			if (Tail == NULL) {
+				return NULL;
+			}
 			DataType Save = Tail->Val;
 			Head = NULL;
 			Tail = NULL;
@@ -125,6 +128,9 @@ public:
 
 	DataType popH() {
 		if (Head == Tail) {
+			if (Head == NULL) {
+				return NULL;
+			}
 			DataType Save = Head->Val;
 			Head = NULL;
 			Tail = NULL;

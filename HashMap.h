@@ -3,8 +3,9 @@
 #define _HASH_MAP_
 
 #include <iostream>
+#include "vec2.h"
 
-#define _CAPACITY_ 40
+#define _CAPACITY_ 50
 #define _PRIME_FOR_HASH_ 11
 
 typedef long long int lli;
@@ -12,12 +13,12 @@ typedef long long int lli;
 class HashMap {
 	class HashNode {
 	public:
-		HashNode(std::string Name, char Value, void* FuncPointer, void* LimitPointer, std::string DataType, char NumInputs) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType(DataType), FunctionsNumInputs(NumInputs), state(false) {}
-		HashNode(std::string Name, char Value, void* FuncPointer,void* LimitPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType("ld"), FunctionsNumInputs(0), state(false) {}
-		HashNode(std::string Name, char Value, void* FuncPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(nullptr), FunctionsNumInputs(0), state(false) {}
-		HashNode(std::string Name,char Value) :Key(Name), FunctionValue(Value), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), state(false) {}
-		HashNode(std::string Name) :Key(Name), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), state(false) {}
-		HashNode() :Key(""), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer, void* LimitPointer, std::string DataType, char NumInputs,vec2 FunctionEval) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType(DataType), FunctionsNumInputs(NumInputs), FunctionEval(FunctionEval), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer,void* LimitPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(LimitPointer), DataType("ld"), FunctionsNumInputs(0), FunctionEval(0), state(false) {}
+		HashNode(std::string Name, char Value, void* FuncPointer) :Key(Name), FunctionValue(Value), FunctionPointer(FuncPointer), FunctionLimitPointer(nullptr), FunctionsNumInputs(0), FunctionEval(0), state(false) {}
+		HashNode(std::string Name,char Value) :Key(Name), FunctionValue(Value), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), FunctionEval(0), state(false) {}
+		HashNode(std::string Name) :Key(Name), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), FunctionEval(0), state(false) {}
+		HashNode() :Key(""), FunctionValue(0), FunctionPointer(nullptr), FunctionLimitPointer(nullptr), DataType("ld"), FunctionsNumInputs(0), FunctionEval(0), state(false) {}
 
 		std::string Key;
 
@@ -26,6 +27,7 @@ class HashMap {
 		void* FunctionLimitPointer;
 		std::string DataType;
 		char FunctionsNumInputs;
+		vec2 FunctionEval;
 
 		bool state;
 	public:
@@ -39,7 +41,11 @@ private:
 	HashNode HashArr[_CAPACITY_];
 
 public:
-	void put(const std::string& key, const char FunctionValue,void* FunctionPointer, void* FunctionLimitPointer, const std::string& DataType, const char& NumInputs) {
+	void put(const std::string& key, const char FunctionValue,void* FunctionPointer, void* FunctionLimitPointer, const std::string& DataType, const char& NumInputs, const vec2& FunctionEval) {
+		if (key == "") {
+			return;
+		}
+		
 		lli hash = CalculateHash(key);
 
 		if (HashArr[hash].state == false) {
@@ -49,6 +55,7 @@ public:
 			HashArr[hash].FunctionLimitPointer = FunctionLimitPointer;
 			HashArr[hash].DataType = DataType;
 			HashArr[hash].FunctionsNumInputs = NumInputs;
+			HashArr[hash].FunctionEval = FunctionEval;
 			HashArr[hash].state = true;
 			return;
 		}
@@ -61,6 +68,7 @@ public:
 				HashArr[i].FunctionLimitPointer = FunctionLimitPointer;
 				HashArr[i].DataType = DataType;
 				HashArr[i].FunctionsNumInputs = NumInputs;
+				HashArr[i].FunctionEval = FunctionEval;
 				HashArr[i].state = true;
 				return;
 			}
@@ -162,28 +170,42 @@ public:
 		return NULL;
 	}
 
-
-
-	void del(const std::string& key) {
+	vec2 getEv(const std::string& key) {
 		lli hash = CalculateHash(key);
 
 		if (HashArr[hash].Key == key) {
-			HashArr[hash].Key = "";
-			HashArr[hash].FunctionValue = NULL;
-			return;
+			return HashArr[hash].FunctionEval;
 		}
 
 		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
 			if (HashArr[i].state == false) {
-				return;
+				return NULL;
 			}
 
 			if (HashArr[i].Key == key) {
-				HashArr[i].Key = "";
-				HashArr[i].FunctionValue = NULL;
-				return;
+				return HashArr[i].FunctionEval;
 			}
 		}
+		return NULL;
+	}
+
+	bool inmap(const std::string& key) {
+		lli hash = CalculateHash(key);
+
+		if (HashArr[hash].Key == key) {
+			return true;
+		}
+
+		for (int i = (hash + 1) % _CAPACITY_; i != hash; i = (i + 1) % _CAPACITY_) {
+			if (HashArr[i].state == false) {
+				return false;
+			}
+
+			if (HashArr[i].Key == key) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 private:

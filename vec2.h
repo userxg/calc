@@ -59,14 +59,18 @@ public:
 	const vec2& operator*(const vec2& num)const {
 		return vec2(this->r * num.r - this->i * num.i, this->r * num.i + this->i * num.r);
 	}
-	const vec2& operator*=(const vec2& num)const {
-		return vec2(this->r * num.r - this->i * num.i, this->r * num.i + this->i * num.r);
+	const vec2& operator*=(const vec2& num) {
+		this->r = this->r * num.r - this->i * num.i;
+		this->i = this->r * num.i + this->i * num.r;
+		return *this;
 	}
 	const vec2& operator*(const ld& num)const {
 		return vec2(this->r * num, this->i * num);
 	}
-	const vec2& operator*=(const ld& num)const {
-		return vec2(this->r * num, this->i * num);
+	const vec2& operator*=(const ld& num) {
+		this->r = this->r * num;
+		this->i = this->i * num;
+		return *this;
 	}
 	// "/"
 	const vec2& operator/(const vec2& num)const {
