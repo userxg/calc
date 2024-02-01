@@ -11,6 +11,9 @@ typedef long long int lli;
 #define _APPROXIMATION_ 1e-15
 #define _TERMS_IN_SUM_ 21
 
+#define _CONST_E_ 2.7182818284
+#define _CONST_PI_ 3.1415926535
+
 // const_e const_pi ceil floor round rad fuct dfuct abs pow sqrt exp ln log W sin cos tg ctg sec cosec arcsin arccos arctg arcctg sh ch th cth sch csch P C
 
 vec2 add_vec2(const vec2& num, const vec2& num1);
@@ -23,7 +26,7 @@ ld const_pi();
 
 vec2 ceil_vec2(const vec2& num, const ld& approximation);
 vec2 floor_vec2(const vec2& num, const ld& approximation);
-vec2 round_vec2(const vec2& num, const ld& approximation);
+vec2 round_vec2(const vec2& num,const ld& approximation);
 
 ld rad(const ld& num);
 lli fuct_vec2(lli num);
@@ -33,7 +36,7 @@ ld Pabs_vec2(const ld& num);
 
 vec2 power_vec2(const vec2& base, lli power);
 vec2 pow_vec2(const vec2& base, const vec2& power);
-vec2 sqrt_vec2(const vec2& num);
+vec2 sqrt_vec2(vec2 num);
 vec2 exp_vec2(const vec2& num);
 vec2 ln_vec2(const vec2& num);
 vec2 log_vec2(const vec2& num, const vec2& num1);
@@ -58,8 +61,8 @@ vec2 cth_vec2(const vec2& num);
 vec2 sch_vec2(const vec2& num);
 vec2 csch_vec2(const vec2& num);
 
-lli P_vec2(const lli& n, const lli& k);
-lli C_vec2(const lli& n, const lli& k);
+lli P_vec2(const lli n, const lli k);
+lli C_vec2(const lli n, const lli k);
 
 //Limits
 
@@ -69,8 +72,8 @@ bool l_ln_vec2(const vec2& num);
 bool l_log_vec2(const vec2& base, const vec2& num);
 bool l_W_vec2(const vec2& num);
 bool l_arc_vec2(const vec2& num);
-bool l_P_vec2(const lli& n, const lli& k);
-bool l_C_vec2(const lli& n, const lli& k);
+bool l_P_vec2(const lli n, const lli k);
+bool l_C_vec2(const lli n, const lli k);
 //General and const
 
 vec2 add_vec2(const vec2& num, const vec2& num1) {
@@ -78,7 +81,7 @@ vec2 add_vec2(const vec2& num, const vec2& num1) {
 }
 
 vec2 sub_vec2(const vec2& num, const vec2& num1) {
-	return num1-num;
+	return num-num1;
 }
 
 vec2 mul_vec2(const vec2& num, const vec2& num1) {
@@ -113,7 +116,7 @@ int sign_vec2(const ld& num) {
 	return -1;
 }
 
-vec2 ceil_vec2(const vec2& num,const ld& approximation) {
+vec2 ceil_vec2(const vec2& num, const ld& approximation) {
 	vec2 res(((lli)(num.r / approximation)+1)*approximation, ((lli)(num.i / approximation)+1) * approximation);
 
 	if (num.r < 0 && num.r != res.r) {
@@ -199,7 +202,12 @@ vec2 pow_vec2(const vec2& a, const vec2& b) {
 	return res;
 }
 
-vec2 sqrt_vec2(const vec2& num) {
+vec2 sqrt_vec2(vec2 num) {
+
+	if (num.i == 0 && num.r < 0) {
+		num = vec2(0, num.r);
+	}
+
 	vec2 x = num / 2;
 	for (int i = 0; i < _TERMS_IN_SUM_; i++) {
 		x = (x + num / x);
@@ -434,11 +442,11 @@ vec2 csch_vec2(const vec2& num) {
 
 //Combinatories
 
-lli P_vec2(const lli& n, const lli& k) {
+lli P_vec2(const lli n, const lli k) {
 	return fuct_vec2(n) / fuct_vec2(n - k);
 }
 
-lli C_vec2(const lli& n, const lli& k) {
+lli C_vec2(const lli n, const lli k) {
 	return fuct_vec2(n) /(fuct_vec2(k) * fuct_vec2(n - k));
 }
 
@@ -463,10 +471,11 @@ bool l_arc_vec2(const vec2& num) {
 	return num.i==0 && abs_vec2(num.r)<=1;
 }
 
-bool l_P_vec2(const lli& n, const lli& k) {
+bool l_P_vec2(const lli n, const lli k) {
 	return n >= 0 && k >= 0 && n>=k;
 }
-bool l_C_vec2(const lli& n, const lli& k) {
+
+bool l_C_vec2(const lli n, const lli k) {
 	return n >= 0 && k >= 0 && n >= k;
 }
 #endif

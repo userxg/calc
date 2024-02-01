@@ -33,6 +33,9 @@ public:
 	}
 
 	DataType get() {
+		if (Tail == NULL) {
+			return NULL;
+		}
 		return Tail->Val;
 	}
 

@@ -3,13 +3,13 @@
 #ifndef _REVERS_POLISH_NOTATION_
 #define _REVERS_POLISH_NOTATION_
 
-#include "DoubleLinkedStack.h"
 #include "HashMap.h"
 #include <string>
 
 #include "vec2.h"
 #include "MathFunctions.h"
 #include "FunctionValueation.h"
+#include "DoubleLinkedStack.h"
 
 typedef SDLL<vec2> sdll_vec;
 typedef SDLL<std::string> sdll_op;
@@ -28,7 +28,7 @@ public:
 
 	calculator() {
 		for (int i = 0; i < _FUNCTION_NAME_ARRAY_SIZE_; i++) {
-			iF.put(FunctionNames[i], FunctionValue[i], FunctionPointers[i], FunctionLimitPointers[i], FunctionDataType[i], FunctionsNumInputs[i],FunctionValue[i]);
+			iF.put(FunctionNames[i], FunctionValue[i], FunctionPointers[i], FunctionLimitPointers[i], FunctionDataType[i], FunctionsNumInputs[i],FunctionsEval[i]);
 		}
 	}
 
@@ -47,7 +47,6 @@ public:
 				oneFunc = false;
 				break;
 			}
-
 		}
 
 		if (oneFunc) {
@@ -98,11 +97,14 @@ private:
 
 	vec2 rpn(std::string& line) {
 
-		std::string buf = "";
 		int i(0);
 		const int length_line = line.length();
 		while (i < length_line) {
 			std::string c(1, line[i]);
+
+			if (c == ",") {
+				i++;
+			}
 
 			if (c == "(") {
 				opB.add(c);
@@ -125,27 +127,6 @@ private:
 			}
 
 		}
-		/*if (IsNum(buf[0]) || line[length_line-1]=='i') {
-			if (Im == true) {
-				if (buf == "") {
-					nums.add(vec2(0, 1));
-					op.add("NUM");
-				}
-				else {
-					nums.add(vec2(0, stold(buf)));
-					op.add("NUM");
-				}
-			}
-			else {
-				nums.add(vec2(stold(buf)));
-				op.add("NUM");
-			}
-		}
-		else {
-			if (buf != "") {
-				op.add(buf);
-			}
-		}*/
 
 		while (!opB.empty()) {
 			op.add(opB.pop());
@@ -157,7 +138,6 @@ private:
 	void FunctionAdd(const std::string& line, int& i, const int& length_line) {
 
 		std::string buf;
-
 		while (i < length_line) {
 			std::string c(1, line[i]);
 
@@ -170,19 +150,18 @@ private:
 			buf += c;
 			i++;
 
-			if (iF.getV(buf)) {
+			if (iF.getV(buf) && iF.getNInp(buf)) {
 				while (!opB.empty() && iF.getV(buf) <= iF.getV(opB.get())) {
 					op.add(opB.pop());
 				}
 				opB.add(buf);
 				buf = "";
 			}
-			else if (iF.getEv(buf).r) {
+			else if(iF.getEv(buf).r || iF.getEv(buf).i){
 				nums.add(iF.getEv(buf));
 				op.add("NUM");
 				buf = "";
 			}
-
 		}
 	}
 
@@ -198,7 +177,6 @@ private:
 				if (Im == true) {
 					if (buf == "") {
 						nums.add(vec2(0, 1));
-						op.add("NUM");
 					}
 					else {
 						nums.add(vec2(0, stold(buf)));
@@ -211,23 +189,38 @@ private:
 					op.add("NUM");
 				}
 
-				buf = "";
 				break;
 			}
 
 			if (c == "i") {
-				i++;
 				Im = true;
 			}
 			else {
 				buf += c;
-				i++;
+			}
+			i++;
+		}
+		if (i == length_line ) {
+			if (Im == true) {
+				if (buf == "") {
+					nums.add(vec2(0, 1));
+				}
+				else {
+					nums.add(vec2(0, stold(buf)));
+				}
+				op.add("NUM");
+				Im = false;
+			}
+			else {
+				nums.add(vec2(stold(buf)));
+				op.add("NUM");
 			}
 		}
 	}
 
 	vec2 eval() {
 
+		printRPN();
 		sdll_vec buf;
 		while (!op.empty()) {
 
@@ -273,17 +266,19 @@ private:
 				case 2:
 					if (DataType == "vec2") {
 						vec2 bufNum = buf.pop();
+
 						vec2 bufNum1 = buf.pop();
 						DomainCheck(oper, bufNum);
 
-						vec2 resNum = ((vec2(*)(vec2, vec2))iF.getP(oper))(bufNum, bufNum1);
+						vec2 resNum = ((vec2(*)(vec2, vec2))iF.getP(oper))(bufNum1, bufNum);
 						buf.add(resNum);
 					}
 					else if (DataType == "lli") {
 						vec2 bufNum = buf.pop();
+
 						vec2 bufNum1 = buf.pop();
 
-						DomainCheck(oper, bufNum, bufNum1);
+						DomainCheck(oper, (lli)bufNum.r,(lli) bufNum1.r);
 
 						vec2 resNum = ((lli(*)(lli, lli))iF.getP(oper))((lli)bufNum.r, (lli)bufNum1.r);
 						buf.add(resNum);
@@ -308,7 +303,7 @@ private:
 	}
 
 	void FixLayers(std::string& line) {
-		std::string new_line = "";
+		std::string new_line;
 
 		if (line[0] == '-' || line[0] == '+') {
 			new_line += '0';
