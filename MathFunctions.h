@@ -11,9 +11,6 @@ typedef long long int lli;
 #define _APPROXIMATION_ 1e-15
 #define _TERMS_IN_SUM_ 21
 
-#define _CONST_E_ 2.7182818284
-#define _CONST_PI_ 3.1415926535
-
 // const_e const_pi ceil floor round rad fuct dfuct abs pow sqrt exp ln log W sin cos tg ctg sec cosec arcsin arccos arctg arcctg sh ch th cth sch csch P C
 
 vec2 add_vec2(const vec2& num, const vec2& num1);
@@ -36,7 +33,7 @@ ld Pabs_vec2(const ld& num);
 
 vec2 power_vec2(const vec2& base, lli power);
 vec2 pow_vec2(const vec2& base, const vec2& power);
-vec2 sqrt_vec2(vec2 num);
+vec2 sqrt_vec2(const vec2& num);
 vec2 exp_vec2(const vec2& num);
 vec2 ln_vec2(const vec2& num);
 vec2 log_vec2(const vec2& num, const vec2& num1);
@@ -202,18 +199,18 @@ vec2 pow_vec2(const vec2& a, const vec2& b) {
 	return res;
 }
 
-vec2 sqrt_vec2(vec2 num) {
+vec2 sqrt_vec2(const vec2& num) {
+	vec2 res;
 
-	if (num.i == 0 && num.r < 0) {
-		num = vec2(0, num.r);
-	}
+	int n = 0;
+	vec2 term(1);
+	do {
+		term = term*(term*term+num)/2;
+		res += term;
+		n++;
+	} while (n < _TERMS_IN_SUM_);
 
-	vec2 x = num / 2;
-	for (int i = 0; i < _TERMS_IN_SUM_; i++) {
-		x = (x + num / x);
-		x = x * .5;
-	}
-	return x;
+	return res;
 }
 
 ld const_e() {
@@ -266,7 +263,11 @@ vec2 exp_vec2(const vec2& num) {
 
 vec2 ln_vec2(const vec2& num) {
 
-	if (num.r < 0) {
+	if (num.r==0 && num.i==1 ) {
+		return vec2(0, const_pi() / 2);
+	}
+
+	if (num.r < 0 && num.i == 0) {
 		return ln_vec2(vec2(-num.r,num.i)) + vec2(0, const_pi());
 	}
 
@@ -309,7 +310,7 @@ vec2 W_vec2(const vec2& num) {
 
 //Trinometry
 vec2 sin_vec2(const vec2& num) {
-	
+
 	vec2 res = num;
 
 	int n = 0;
@@ -377,16 +378,14 @@ vec2 arccos_vec2(const vec2& num) {
 
 vec2 arctg_vec2(const vec2& num) {
 	vec2 res = num;
-	int sign = -1;
-	int n = 3;
+	int n = 1;
 
-	vec2 term;
+	vec2 term = num;
 	do {
-		term = power_vec2(num, n) / n;
-		res += term * sign;
-		sign *= -1;
-		n += 2;
-	} while (n < _TERMS_IN_SUM_);
+		term = term * (num * -1 * (2 * n - 1)) / (2 * n + 1);
+		res += term;
+		n ++;
+	} while (n<_TERMS_IN_SUM_);
 
 	return res;
 }

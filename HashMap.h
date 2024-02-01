@@ -5,7 +5,7 @@
 #include <iostream>
 #include "vec2.h"
 
-#define _CAPACITY_ 50
+#define _CAPACITY_ 100
 #define _PRIME_FOR_HASH_ 11
 
 typedef long long int lli;

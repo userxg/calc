@@ -290,7 +290,7 @@ private:
 			}
 		}
 
-		return buf.pop();
+		return round_vec2(buf.pop(),1e-5);
 	}
 
 	void Correction(std::string& line) {
