@@ -32,7 +32,7 @@ public:
 		}
 	}
 
-	vec2 Solve(std::string& line) {
+	vec2 Solve(std::string line) {
 		Correction(line);
 
 		const int line_str = line.length();
@@ -141,14 +141,11 @@ private:
 		while (i < length_line) {
 			std::string c(1, line[i]);
 
-			if (c == "(" || c == ")" || IsNum(c)) {
-				if (c == "(" || c == ")") {
-					break;
-				}
-
-				if (c=="i" && !IsNum(line[i-1])) {
-					break;
-				}
+			if (c == "(" || c == ")" || (IsNum(c) && c!="i")) {
+				break;
+			}
+			if (c == "i" && buf == "") {
+				break;
 			}
 
 			buf += c;
@@ -224,7 +221,6 @@ private:
 
 	vec2 eval() {
 
-		printRPN();
 		sdll_vec buf;
 		while (!op.empty()) {
 
