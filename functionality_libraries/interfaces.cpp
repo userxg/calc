@@ -59,11 +59,12 @@ void Compute::compute_meaning_interface() const
 void Complex::complex_interface() const
 {
 	cout << "-----------------[ complex interface ]----------------" << "\n";
-	cout << "--[ to choose a section, enter a figure or a title ]--" << "\n";
-	cout << "--------------{    1 add - addtitoin    }-------------" << "\n";
-	cout << "--------------{ 2 mult - multiplication }-------------" << "\n";
-	cout << "--------------{    3 div - division     }-------------" << "\n";
-	cout << "--------------{    4  sqrt - square     }-------------" << "\n";
+	cout << "---------------------[ meaning: ]---------------------" << "\n";
+	cout << "----{     You can enter a single-line complex    }----" << "\n";
+	cout << "----{  arithmetic expression and get the result  }----" << "\n";
+	cout << "---------------------[ WARNING! ]---------------------" << "\n";
+	cout << "--------{ Entering an incorrect string may  }---------" << "\n";
+	cout << "--------{    cause the program to crash.    }---------" << "\n";
 	cout << "---------------------[  rules: ]----------------------" << "\n";
 	cout << "----{ * The divisor cannot be equal to 0;        }----" << "\n";
 	cout << "----{ * Logarithm base cannot equal to 1;        }----" << "\n";
@@ -72,7 +73,7 @@ void Complex::complex_interface() const
 	cout << "-------------{    3.4e-4932..3.4e+4932    }-----------" << "\n";
 	cout << "------------[ info: '~' or 'back' for back ]----------" << "\n";
 	cout << "------------[       '0' or 'stop' for off  ]----------" << "\n";
-	cout << "------------------[ chose section: ]------------------" << "\n";
+	cout << "------------[ enter expression to compute: ]----------" << "\n";
 }
 
 void Complex::wrong_command() const
