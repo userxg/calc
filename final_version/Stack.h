@@ -1,3 +1,5 @@
+#pragma once
+
 template <typename DataType>
 
 class Stack
@@ -9,11 +11,11 @@ private:
 		Node* next;
 		DataType element;
 	};
-	Node* head; 
+	Node* head;
 	int size;
 
 public:
-	Stack() : head(nullptr), size(){};
+	Stack() : head(nullptr), size() {};
 
 	void push(DataType elem)
 	{
@@ -34,18 +36,20 @@ public:
 		}
 	}
 
-	
-	DataType top() const 
+
+	DataType top() const
 	{
 		if (!isEmpty())
 			return head->element;
-		return 0; 
+		else
+		{
+			cout << "exception" << "\n";
+		}
 	}
 
-	bool isEmpty() const
-	{
-		return size == 0;
-	}
+	bool isEmpty() const { return size == 0; }
+
+	int Size() const { return size; }
 
 public:
 	~Stack()
